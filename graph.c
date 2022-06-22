@@ -2,81 +2,94 @@
 #include <stdlib.h>
 #include "hashmap.h"
 #include "priorityqueue.h"
+#include "deque.h"
 
-/* basic unit of the graph */
-typedef struct graph_vertex {
-	void *label;
-	struct graph_vertex *predecessor;
-	double cost;
-	int visited;
-} vertex;
-
-/* graph adt */
+/* graph abstract data type */
 typedef struct graph_T {
-	hashmap_T *label_to_vertex_map;
+	int (*label_hash)(const void*);
+	int (*label_equals)(const void*, const void*);
 	hashmap_T *adj_list;
 	int num_edges;
 } graph_T;
 
-int vertex_hash(const void *E) {
-	unsigned long value = (unsigned long)((vertex*)E)->label;
-	return (int)(value ^ (value >> 32));
-}
+/* basic unit of the graph */
+typedef struct graph_vertex {
+	void *label;
+	size_t degree;
+	struct graph_vertex *predecessor;
+	graph_T *this;
+	double cost;
+	int visited;
+} vertex;
 
-int vertex_equality(const void *E_1, const void *E_2) {
-	return ((vertex*)E_1)->label == ((vertex*)E_2)->label;
-}
+/*** HELPER FUNCTIONS - BEGIN ***/
 
-vertex *alloc_vertex(void *label) {
-	vertex *v = malloc(sizeof *v);
-	if (v == NULL) return NULL;
+enum COST_CONST {ZERO, INF};
+
+static void init_vertex(vertex *v, void *label, graph_T *this) {
 	v->label = label;
+	v->degree = 0;
 	v->predecessor = NULL;
+	v->this = this;
 	v->cost = 0.0;
 	v->visited = 0;
-	return v;
 }
 
-graph_T *alloc_graph() {
+static void graph_reset_vertices(graph_T *this, enum COST_CONST val) {
+	double reset_val = (val == INF) ? 1.0/0.0 : 0.0;
+	vertex *current_vertex;
+	hashmap_entry *adj_list_entry;
+	hashmap_T_iterator adj_list_itr = hashmap_getiterator(this->adj_list);
+	
+	while (hashmap_iterator_hasnext(&adj_list_itr)) {
+		adj_list_entry = hashmap_iterator_next(&adj_list_itr);
+		current_vertex = adj_list_entry->key;
+		current_vertex->cost = reset_val;
+		current_vertex->visited = 0;
+		current_vertex->predecessor = NULL;
+	}
+}
+
+static vertex *corresponding_vertex(graph_T *this, void *label) {
+	vertex v_check;
+	init_vertex(&v_check, label, this);
+	return hashmap_get_keyref(this->adj_list, &v_check);
+}
+
+static int cost_comparator(const void *v_1, const void *v_2) {
+	double cost_1 = ((vertex*)v_1)->cost;
+	double cost_2 = ((vertex*)v_2)->cost;
+	return (cost_1 > cost_2) - (cost_1 < cost_2);
+}
+
+/*** HELPER FUNCTIONS - END ***/
+
+static int vertex_hash(const void *V) {
+	const vertex *v = V;
+	return v->this->label_hash(v->label);
+}
+
+static int vertex_equality(const void *V_1, const void *V_2) {
+	const vertex *v_1 = V_1;
+	const vertex *v_2 = V_2;
+	return v_1->this->label_equals(v_1->label, v_2->label);
+}
+
+graph_T *alloc_graph(int label_hash(const void*), int label_equals(const void*, const void*)) {
 	graph_T *graph = malloc(sizeof *graph);
 	if (graph == NULL) {
 		fprintf(stderr, "**graph memory allocation failure** : failed to allocate new graph\n");
 		exit(EXIT_FAILURE);
 	}
 	
-	/* FIXME: using an identity map for label:vertex pair is probably not the right choice here */
-	graph->label_to_vertex_map = alloc_identityhashmap();
+	graph->label_hash = label_hash;
+	graph->label_equals = label_equals;
 	graph->adj_list = alloc_hashmap(vertex_hash, vertex_equality);
 	graph->num_edges = 0;
 	return graph;
 }
 
 void dealloc_graph(graph_T *this) {
-	/* BROKEN: CONCURRENT MODIFICATION HAPPENS
-	hashmap_T_iterator inner_entries_itr, outer_entries_itr;
-	hashmap_entry *inner_entry, *outer_entry;
-	
-	for (outer_entries_itr = hashmap_getiterator(this->adj_list); hashmap_iterator_hasnext(&outer_entries_itr);) {
-		outer_entry = hashmap_iterator_next(&outer_entries_itr);
-		
-		// free the vertex
-		free(outer_entry->key);
-		
-		// each vertex maps to another hashmap, process those
-		for (inner_entries_itr = hashmap_getiterator(outer_entry->value); hashmap_iterator_hasnext(&inner_entries_itr);) {
-			inner_entry = hashmap_iterator_next(&inner_entries_itr);
-			// free the weight
-			free(inner_entry->value);
-		}
-		
-		// free the inner hashmap afterwards
-		dealloc_hashmap(outer_entry->value);
-	}
-
-	dealloc_hashmap(this->adj_list);
-	dealloc_hashmap(this->label_to_vertex_map);
-	free(this);
-	*/
 	size_t i, j;
 	hashmap_entry **inner_entries;
 	hashmap_entry **outer_entries = hashmap_getentries(this->adj_list);
@@ -100,28 +113,30 @@ void dealloc_graph(graph_T *this) {
 	
 	free(outer_entries);
 	dealloc_hashmap(this->adj_list);
-	dealloc_hashmap(this->label_to_vertex_map);
 	free(this);
 }
 
 int graph_add_vertex(graph_T *this, void *label) {
-	if (hashmap_get(this->label_to_vertex_map, label) == NULL) {
-		vertex *new_vertex = alloc_vertex(label);
-		hashmap_put(this->label_to_vertex_map, label, new_vertex);
+	vertex *new_vertex = malloc(sizeof *new_vertex);
+	if (new_vertex == NULL) return 0;
+	init_vertex(new_vertex, label, this);
+	
+	if (hashmap_get(this->adj_list, new_vertex) == NULL) {
 		hashmap_put(this->adj_list, new_vertex, alloc_hashmap(vertex_hash, vertex_equality));
 		return 1;
 	}
+	
+	free(new_vertex);
 	return 0;
 }
 
 int graph_add_edge(graph_T *this, void *a, void *b, double weight) {
-	vertex *a_, *b_;
-	a_ = hashmap_get(this->label_to_vertex_map, a);
-	b_ = hashmap_get(this->label_to_vertex_map, b);
-	if (a_ != NULL && b_ != NULL) {
+	vertex *a_v = corresponding_vertex(this, a);
+	vertex *b_v = corresponding_vertex(this, b);
+	if (a_v != NULL && b_v != NULL) {
 		double *vertex_weight;
 		/* edge already exists */
-		if (hashmap_get(hashmap_get(this->adj_list, a_), b_) != NULL) return 0;
+		if (hashmap_get(hashmap_get(this->adj_list, a_v), b_v) != NULL) return 0;
 		
 		vertex_weight = malloc(sizeof *vertex_weight);
 		if (vertex_weight == NULL) {
@@ -131,7 +146,7 @@ int graph_add_edge(graph_T *this, void *a, void *b, double weight) {
 		}
 		
 		*vertex_weight = weight;
-		hashmap_put(hashmap_get(this->adj_list, a_), b_, vertex_weight);
+		hashmap_put(hashmap_get(this->adj_list, a_v), b_v, vertex_weight);
 		
 		vertex_weight = malloc(sizeof *vertex_weight);
 		if (vertex_weight == NULL) {
@@ -141,7 +156,10 @@ int graph_add_edge(graph_T *this, void *a, void *b, double weight) {
 		}
 		
 		*vertex_weight = weight;
-		hashmap_put(hashmap_get(this->adj_list, b_), a_, vertex_weight);
+		hashmap_put(hashmap_get(this->adj_list, b_v), a_v, vertex_weight);
+		
+		a_v->degree += 1;
+		b_v->degree += 1;
 		this->num_edges += 2;
 		return 1;
 	}
@@ -149,16 +167,18 @@ int graph_add_edge(graph_T *this, void *a, void *b, double weight) {
 }
 
 int graph_remove_edge(graph_T *this, void *a, void *b) {
-	vertex *a_, *b_;
-	a_ = hashmap_get(this->label_to_vertex_map, a);
-	b_ = hashmap_get(this->label_to_vertex_map, b);
-	if (a_ != NULL && b_ != NULL && hashmap_get(hashmap_get(this->adj_list, a_), b_) != NULL) {
+	vertex *a_v = corresponding_vertex(this, a);
+	vertex *b_v = corresponding_vertex(this, b);
+	if (a_v != NULL && b_v != NULL && hashmap_get(hashmap_get(this->adj_list, a_v), b_v) != NULL) {
 		/* free the dynamically allocated weights in both connections */
-		free(hashmap_get(hashmap_get(this->adj_list, a_), b_));
-		free(hashmap_get(hashmap_get(this->adj_list, b_), a_));
+		free(hashmap_get(hashmap_get(this->adj_list, a_v), b_v));
+		free(hashmap_get(hashmap_get(this->adj_list, b_v), a_v));
 		/* disconnect the vertex in both inner hashmaps */
-		hashmap_remove(hashmap_get(this->adj_list, a_), b_);
-		hashmap_remove(hashmap_get(this->adj_list, b_), a_);
+		hashmap_remove(hashmap_get(this->adj_list, a_v), b_v);
+		hashmap_remove(hashmap_get(this->adj_list, b_v), a_v);
+		
+		a_v->degree -= 1;
+		b_v->degree -= 1;
 		this->num_edges -= 2;
 		return 1;
 	}
@@ -166,28 +186,7 @@ int graph_remove_edge(graph_T *this, void *a, void *b) {
 }
 
 int graph_remove_vertex(graph_T *this, void *label) {
-	/* BROKEN: CONCURRENT MODIFICATION HAPPENS
-	vertex *removal;
-	removal = hashmap_get(this->label_to_vertex_map, label);
-	if (removal != NULL) {
-		
-		hashmap_entry *entry;
-		hashmap_T_iterator neighbor_itr = hashmap_getiterator(hashmap_get(this->adj_list, removal));
-		while (hashmap_iterator_hasnext(&neighbor_itr)) {
-			entry = hashmap_iterator_next(&neighbor_itr);
-			printf("..\n");
-			graph_remove_edge(this, label, ((vertex*)entry->key)->label);
-		}
-		dealloc_hashmap(hashmap_get(this->adj_list, removal));
-		hashmap_remove(this->adj_list, removal);
-		hashmap_remove(this->label_to_vertex_map, label);
-		free(removal);
-		return 1;
-	}
-	return 0;
-	*/
-	vertex *removal;
-	removal = hashmap_get(this->label_to_vertex_map, label);
+	vertex *removal = corresponding_vertex(this, label);
 	if (removal != NULL) {
 		size_t i;
 		hashmap_entry **entries;
@@ -198,7 +197,6 @@ int graph_remove_vertex(graph_T *this, void *label) {
 		free(entries);
 		dealloc_hashmap(hashmap_get(this->adj_list, removal));
 		hashmap_remove(this->adj_list, removal);
-		hashmap_remove(this->label_to_vertex_map, label);
 		free(removal);
 		return 1;
 	}
@@ -207,50 +205,127 @@ int graph_remove_vertex(graph_T *this, void *label) {
 }
 
 int graph_has_edge(graph_T *this, void *a, void *b) {
-	vertex *a_, *b_;
-	a_ = hashmap_get(this->label_to_vertex_map, a);
-	b_ = hashmap_get(this->label_to_vertex_map, b);
-	return a_ != NULL && b_ != NULL ? hashmap_get(hashmap_get(this->adj_list, a_), b_) != NULL : 0;
+	vertex *a_v = corresponding_vertex(this, a);
+	vertex *b_v = corresponding_vertex(this, b);
+	return a_v != NULL && b_v != NULL ? hashmap_get(hashmap_get(this->adj_list, a_v), b_v) != NULL : 0;
 }
+
+static deque_T *graph_breadth_first_search_internal(graph_T *this, void *origin, int return_labels) {
+	hashmap_T_iterator edge_itr;
+	
+	deque_T *retval, *bfs;
+	vertex *process, *origin_v = corresponding_vertex(this, origin);
+	
+	retval = alloc_deque();
+	if (origin_v == NULL) return retval;
+	
+	graph_reset_vertices(this, ZERO);
+	bfs = alloc_deque();
+	deque_enqueue(retval, return_labels ? origin_v->label : origin_v);
+	deque_enqueue(bfs, origin_v);
+	origin_v->visited = 1;
+	
+	while (!deque_isempty(bfs)) {
+		process = deque_dequeue(bfs);
+		edge_itr = hashmap_getiterator(hashmap_get(this->adj_list, process));
+		
+		while(hashmap_iterator_hasnext(&edge_itr)) {
+			process = hashmap_iterator_next(&edge_itr)->key;
+			
+			if (!process->visited) {
+				process->visited = 1;
+				deque_enqueue(retval, return_labels ? process->label : process);
+				deque_enqueue(bfs, process);
+			}
+		}
+	}
+	
+	dealloc_deque(bfs);
+	return retval;
+}
+
+deque_T *graph_breadth_first_search(graph_T *this, void *origin) {
+	return graph_breadth_first_search_internal(this, origin, 1);
+}
+
+/* broken algorithm, needs a whole rewrite
+
+static int largest_degree_comparator(const void *v_1, const void *v_2) {
+	size_t degree_1 = ((vertex*)v_1)->degree;
+	size_t degree_2 = ((vertex*)v_2)->degree;
+	return (degree_1 < degree_2) - (degree_1 > degree_2);
+}
+
+int graph_minimum_colors(graph_T *this, void *origin) {
+	hashmap_T_iterator edge_itr, sub_edge_itr;
+	int flag, minimum_colors = 0;
+	
+	deque_T *backed = graph_breadth_first_search_internal(this, origin, 0);
+	priorityqueue_T *cluster = alloc_priorityqueue(largest_degree_comparator);
+	
+	vertex *process, *subprocess;
+	
+	while (!deque_isempty(backed)) {
+		priorityqueue_enqueue(cluster, deque_dequeue(backed));
+	}
+	
+	graph_reset_vertices(this, ZERO);
+	while (priorityqueue_peek(cluster) != NULL) {
+		process = priorityqueue_dequeue(cluster);
+		process->visited = 1;
+		flag = 0;
+		minimum_colors++;
+		
+		do {
+			edge_itr = hashmap_getiterator(hashmap_get(this->adj_list, process));
+	
+			while(hashmap_iterator_hasnext(&edge_itr)) {
+				sub_edge_itr = hashmap_getiterator(hashmap_get(this->adj_list, hashmap_iterator_next(&edge_itr)->key));
+				
+				while(hashmap_iterator_hasnext(&sub_edge_itr)) {
+					flag = 1;
+					subprocess = hashmap_iterator_next(&sub_edge_itr)->key;
+					printf("\treceived subneighbor %c\n", *(char*)subprocess->label);
+					if (subprocess->visited) {
+						flag = 0;
+						break;
+					}
+				}
+			}
+			
+			if (flag) {
+				subprocess->visited = 1;
+				priorityqueue_remove(cluster, subprocess);
+				process = subprocess;
+			}
+			
+		} while (flag);
+	}
+	
+	return minimum_colors;
+}
+*/
 
 /** implementation of dijkstra's algorithm - BEGIN **/
-int cost_comparator(const void *v_1, const void *v_2) {
-	double cost_1 = ((vertex*)v_1)->cost;
-	double cost_2 = ((vertex*)v_2)->cost;
-	return (cost_1 > cost_2) - (cost_1 < cost_2);
-}
-
-double graph_cheapest_path(graph_T *this, void *a, void *b) {
+double graph_cheapest_path(graph_T *this, void *origin, void *end, deque_T *stack) {
+	
 	double cheapest = -1;
-	const double INF = 1.0/0.0;
-	size_t i;
 	hashmap_T_iterator edge_itr;
 	hashmap_entry *current_neighbors;
 	priorityqueue_T *pq;
 	
 	vertex *process, *neighbor;
-	vertex *origin = hashmap_get(this->label_to_vertex_map, a);
-	vertex *end = hashmap_get(this->label_to_vertex_map, b);
-	if (origin == NULL || end == NULL) return -1.0;
+	vertex *origin_v = corresponding_vertex(this, origin);
+	vertex *end_v = corresponding_vertex(this, end);
 	
-	/* set cost of all vertices except origin as INF - begin */
-	{
-		vertex *current_vertex;
-		hashmap_entry *adj_list_entry;
-		hashmap_T_iterator adj_list_itr = hashmap_getiterator(this->adj_list);
-		
-		while (hashmap_iterator_hasnext(&adj_list_itr)) {
-			adj_list_entry = hashmap_iterator_next(&adj_list_itr);
-			current_vertex = adj_list_entry->key;
-			current_vertex->cost = (current_vertex == origin) ? 0 : INF;
-			current_vertex->visited = 0;
-			current_vertex->predecessor = NULL;
-		}
-	}
-	/* end */
+	if (origin_v == NULL || end_v == NULL) return -1.0;
+	
+	/* set cost of all vertices except origin as INF */
+	graph_reset_vertices(this, INF);
+	origin_v->cost = 0.0;
 	
 	pq = alloc_priorityqueue(cost_comparator);
-	priorityqueue_enqueue(pq, origin);
+	priorityqueue_enqueue(pq, origin_v);
 	/* dirty way of checking if the queue is empty */
 	while (priorityqueue_peek(pq) != NULL) {
 		double new_distance;
@@ -258,7 +333,7 @@ double graph_cheapest_path(graph_T *this, void *a, void *b) {
 		process = priorityqueue_dequeue(pq);
 		process->visited = 1;
 		
-		if (process == end) {
+		if (process == end_v) {
 			cheapest = process->cost;
 			break;
 		}
@@ -284,6 +359,14 @@ double graph_cheapest_path(graph_T *this, void *a, void *b) {
 		}
 	}
 	dealloc_priorityqueue(pq);
+	
+	if (stack != NULL) {
+		vertex *traversal = end_v;
+		while (traversal != NULL) {
+			deque_push(stack, traversal->label);
+			traversal = traversal->predecessor;
+		}
+	}
 	return cheapest;
 }
 /** END **/
