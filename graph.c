@@ -18,12 +18,12 @@ typedef struct graph_T {
 	int num_edges;
 } graph_T;
 
-int vertex_hash(void *E) {
+int vertex_hash(const void *E) {
 	unsigned long value = (unsigned long)((vertex*)E)->label;
 	return (int)(value ^ (value >> 32));
 }
 
-int vertex_equality(void *E_1, void *E_2) {
+int vertex_equality(const void *E_1, const void *E_2) {
 	return ((vertex*)E_1)->label == ((vertex*)E_2)->label;
 }
 
@@ -52,6 +52,31 @@ graph_T *alloc_graph() {
 }
 
 void dealloc_graph(graph_T *this) {
+	/* BROKEN: CONCURRENT MODIFICATION HAPPENS
+	hashmap_T_iterator inner_entries_itr, outer_entries_itr;
+	hashmap_entry *inner_entry, *outer_entry;
+	
+	for (outer_entries_itr = hashmap_getiterator(this->adj_list); hashmap_iterator_hasnext(&outer_entries_itr);) {
+		outer_entry = hashmap_iterator_next(&outer_entries_itr);
+		
+		// free the vertex
+		free(outer_entry->key);
+		
+		// each vertex maps to another hashmap, process those
+		for (inner_entries_itr = hashmap_getiterator(outer_entry->value); hashmap_iterator_hasnext(&inner_entries_itr);) {
+			inner_entry = hashmap_iterator_next(&inner_entries_itr);
+			// free the weight
+			free(inner_entry->value);
+		}
+		
+		// free the inner hashmap afterwards
+		dealloc_hashmap(outer_entry->value);
+	}
+
+	dealloc_hashmap(this->adj_list);
+	dealloc_hashmap(this->label_to_vertex_map);
+	free(this);
+	*/
 	size_t i, j;
 	hashmap_entry **inner_entries;
 	hashmap_entry **outer_entries = hashmap_getentries(this->adj_list);
@@ -141,6 +166,26 @@ int graph_remove_edge(graph_T *this, void *a, void *b) {
 }
 
 int graph_remove_vertex(graph_T *this, void *label) {
+	/* BROKEN: CONCURRENT MODIFICATION HAPPENS
+	vertex *removal;
+	removal = hashmap_get(this->label_to_vertex_map, label);
+	if (removal != NULL) {
+		
+		hashmap_entry *entry;
+		hashmap_T_iterator neighbor_itr = hashmap_getiterator(hashmap_get(this->adj_list, removal));
+		while (hashmap_iterator_hasnext(&neighbor_itr)) {
+			entry = hashmap_iterator_next(&neighbor_itr);
+			printf("..\n");
+			graph_remove_edge(this, label, ((vertex*)entry->key)->label);
+		}
+		dealloc_hashmap(hashmap_get(this->adj_list, removal));
+		hashmap_remove(this->adj_list, removal);
+		hashmap_remove(this->label_to_vertex_map, label);
+		free(removal);
+		return 1;
+	}
+	return 0;
+	*/
 	vertex *removal;
 	removal = hashmap_get(this->label_to_vertex_map, label);
 	if (removal != NULL) {
@@ -158,6 +203,7 @@ int graph_remove_vertex(graph_T *this, void *label) {
 		return 1;
 	}
 	return 0;
+	
 }
 
 int graph_has_edge(graph_T *this, void *a, void *b) {
@@ -168,7 +214,7 @@ int graph_has_edge(graph_T *this, void *a, void *b) {
 }
 
 /** implementation of dijkstra's algorithm - BEGIN **/
-int cost_comparator(void *v_1, void *v_2) {
+int cost_comparator(const void *v_1, const void *v_2) {
 	double cost_1 = ((vertex*)v_1)->cost;
 	double cost_2 = ((vertex*)v_2)->cost;
 	return (cost_1 > cost_2) - (cost_1 < cost_2);
@@ -178,7 +224,8 @@ double graph_cheapest_path(graph_T *this, void *a, void *b) {
 	double cheapest = -1;
 	const double INF = 1.0/0.0;
 	size_t i;
-	hashmap_entry **current_neighbors;
+	hashmap_T_iterator edge_itr;
+	hashmap_entry *current_neighbors;
 	priorityqueue_T *pq;
 	
 	vertex *process, *neighbor;
@@ -189,19 +236,16 @@ double graph_cheapest_path(graph_T *this, void *a, void *b) {
 	/* set cost of all vertices except origin as INF - begin */
 	{
 		vertex *current_vertex;
-		hashmap_entry **adj_list_entries = hashmap_getentries(this->adj_list);
-	
-		for (i = 0; adj_list_entries[i] != NULL; i++) {
-			current_vertex = adj_list_entries[i]->key;
-			if (current_vertex->label == a) {
-				current_vertex->cost = 0;
-			} else {
-				current_vertex->cost = INF;
-			}
+		hashmap_entry *adj_list_entry;
+		hashmap_T_iterator adj_list_itr = hashmap_getiterator(this->adj_list);
+		
+		while (hashmap_iterator_hasnext(&adj_list_itr)) {
+			adj_list_entry = hashmap_iterator_next(&adj_list_itr);
+			current_vertex = adj_list_entry->key;
+			current_vertex->cost = (current_vertex == origin) ? 0 : INF;
 			current_vertex->visited = 0;
 			current_vertex->predecessor = NULL;
 		}
-		free(adj_list_entries);
 	}
 	/* end */
 	
@@ -218,11 +262,12 @@ double graph_cheapest_path(graph_T *this, void *a, void *b) {
 			cheapest = process->cost;
 			break;
 		}
-		
-		current_neighbors = hashmap_getentries(hashmap_get(this->adj_list, process));
-		for (i = 0; current_neighbors[i] != NULL; i++) {
-			neighbor = current_neighbors[i]->key;
-			new_distance = *(double*)(current_neighbors[i]->value);
+
+		edge_itr = hashmap_getiterator(hashmap_get(this->adj_list, process));
+		while (hashmap_iterator_hasnext(&edge_itr)) {
+			current_neighbors = hashmap_iterator_next(&edge_itr);
+			neighbor = current_neighbors->key;
+			new_distance = *(double*)(current_neighbors->value);
 			
 			if (!neighbor->visited) {
 				/* this won't have effect if the vertex is already in PQ */
@@ -237,7 +282,6 @@ double graph_cheapest_path(graph_T *this, void *a, void *b) {
 				}
 			}
 		}
-		free(current_neighbors);
 	}
 	dealloc_priorityqueue(pq);
 	return cheapest;
