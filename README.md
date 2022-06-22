@@ -4,6 +4,7 @@ Self-explanatory, these are commonly used data structures implemented in C. All 
 ### things to note
 * Hashmap implementation isn't complete; no way to rehash or remove key-value pairs.
 * Priority queue really should just be called priority set instead since duplicate items aren't allowed.
+  * Priority queue uses a 4-ary heap instead of a 2-ary heap.
 * Dijkstra's algorithm sometimes segfault for reasons idk why. More information about this in driver.c's comments.
   * The coredump file is provided.
 
