@@ -248,6 +248,31 @@ deque_T *graph_breadth_first_search(graph_T *this, void *origin) {
 	return graph_breadth_first_search_internal(this, origin, 1);
 }
 
+static void graph_depth_first_search_internal(graph_T *this, deque_T *traversal_order, vertex *origin) {
+	vertex *process;
+	hashmap_T_iterator edge_itr = hashmap_getiterator(hashmap_get(this->adj_list, origin));
+	
+	origin->visited = 1;
+	deque_push(traversal_order, origin->label);
+	
+	while (hashmap_iterator_hasnext(&edge_itr)) {
+		process = hashmap_iterator_next(&edge_itr)->key;
+		if (!process->visited) {
+			graph_depth_first_search_internal(this, traversal_order, process);
+		}
+	}
+}
+
+deque_T *graph_depth_first_search(graph_T *this, void *origin) {
+	deque_T *retval = alloc_deque();
+	vertex *origin_v = corresponding_vertex(this, origin);
+	graph_reset_vertices(this, ZERO);
+	if (origin_v != NULL) {
+		graph_depth_first_search_internal(this, retval, origin_v);
+	}
+	return retval;
+}
+
 /* broken algorithm, needs a whole rewrite
 
 static int largest_degree_comparator(const void *v_1, const void *v_2) {

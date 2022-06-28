@@ -57,14 +57,13 @@ void test_graph(void);
 /* Potential source of segmentation fault (in order of calls):
  * This segfault only happens sometimes. to replicate it I ran "./untilFail ./driver" which repeatedly runs the program until a non-zero exit occurs.
  *
- * file: driver.c         line 074: test_graph();
- * file: driver.c         line 210: print_shortest_path('B', 'A');
- * file: driver.c         line 175: graph_cheapest_path(graph, &alphabet[from], &alphabet[to], deque);
- * file: graph.c          line 333: process = priorityqueue_dequeue(pq);
+ * file: driver.c         line 073: test_graph();
+ * file: driver.c         line 198: print_shortest_path('B', 'A');
+ * file: driver.c         line 163: graph_cheapest_path(graph, &alphabet[from], &alphabet[to], deque);
+ * file: graph.c          line 358: process = priorityqueue_dequeue(pq);
  * file: priorityqueue.c  line 136: *(int*)hashmap_get(this->indexmap, this->heap[0]) = 0;
  */
 int main(void) {
-	/* deque_T *BFS; */
 	srand(time(NULL));
 	init_alphabet();
 	alloc_ds();
@@ -72,17 +71,6 @@ int main(void) {
 	test_hashmap();
 	test_pqueue();
 	test_graph();
-	/*
-	BFS = graph_breadth_first_search(graph, &alphabet['A']);
-	puts("breadth first search incoming");
-	while (!deque_isempty(BFS)) {
-		putchar(*(char*)deque_popleft(BFS));
-		if (!deque_isempty(BFS)) printf(", ");
-	}
-	
-	putchar('\n');
-	dealloc_deque(BFS);
-	*/
 	free_ds();
 	return 0;
 }
@@ -182,7 +170,7 @@ void print_shortest_path(int from, int to) {
 }
 
 void test_graph(void) {
-	int i, j;
+	int i/*, j*/;
 	printf("=== TESTING UNDIRECTED GRAPH === \n");
 	/* example graph taken from https://www.youtube.com/watch?v=pVfj6mxhdMw */
 	printf("   6\n"
@@ -216,5 +204,25 @@ void test_graph(void) {
 		printf("\n");
 	}
 	*/
+	
+	/* Testing Breadth First Search */
+	dealloc_deque(deque);
+	deque = graph_breadth_first_search(graph, &alphabet['A']);
+	puts("Breadth First Search (using 'A' as origin): ");
+	while (!deque_isempty(deque)) {
+		putchar(*(char*)deque_popleft(deque));
+		if (!deque_isempty(deque)) printf(", ");
+	}
+	putchar('\n');
+	
+	/* Testing Depth First Search */
+	dealloc_deque(deque);
+	deque = graph_depth_first_search(graph, &alphabet['E']);
+	puts("Depth First Search (using 'E' as origin): ");
+	while (!deque_isempty(deque)) {
+		putchar(*(char*)deque_popleft(deque));
+		if (!deque_isempty(deque)) printf(", ");
+	}
+	putchar('\n');
 	printf("=== TESTING DONE  === \n\n");
 }
