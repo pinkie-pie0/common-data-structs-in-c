@@ -1,9 +1,20 @@
+### Compiler Configurations
 CC = gcc
-TARGETS = driver
-DEPENDENCIES = graph.c priorityqueue.c hashmap.c deque.c
-CFLAGS = -Wall -std=c89 -pedantic-errors -g -Os
+C89 = -Wall -std=c89 -pedantic-errors
+DEBUG = -g
+OPTS = -Os
 
-all: $(TARGETS)
+### Directory Configurations
+SRCDIR = ./src
+INCDIR = ./inc
 
-$(TARGETS): %: %.c
-	$(CC) $(CFLAGS) $(DEPENDENCIES) -o $@ $<
+### Compiler Flags
+TARGET = driver
+SRCS = $(wildcard $(SRCDIR)/*.c)
+INCLUDE = $(addprefix -I,$(INCDIR))
+CFLAGS = $(C89) $(DEBUG) $(OPTS) $(INCLUDE)
+
+all: $(TARGET)
+
+$(TARGET): %: %.c
+	$(CC) $(CFLAGS) $(SRCS) -o $@ $<
