@@ -118,23 +118,23 @@ static void avltree_insert_helper(avltree_T *this, avltree_node **traversal, voi
 		avltree_insert_helper(this, &(*traversal)->left, val);
 
 		if (NODE_HEIGHT((*traversal)->left) - NODE_HEIGHT((*traversal)->right) == 2) {
-			if (this->compare(val, (*traversal)->left->val) < 0)	/* imbalance occurs due to '/'-shaped subtree */
-				avltree_rotate_right(traversal);
-			else													/* imbalance occurs due to '<' shaped subtree */
-				avltree_rotate_leftright(traversal);
+			if (this->compare(val, (*traversal)->left->val) < 0)
+				avltree_rotate_right(traversal); /* imbalance due to '/'-shaped subtree */
+			else
+				avltree_rotate_leftright(traversal); /* imbalance due to '<' shaped subtree */
 		}
 		
 	} else if (this->compare(val, (*traversal)->val) > 0) {
 		avltree_insert_helper(this, &(*traversal)->right, val);
 
 		if (NODE_HEIGHT((*traversal)->right) - NODE_HEIGHT((*traversal)->left) == 2) {
-			if (this->compare(val, (*traversal)->right->val) > 0)	/* imbalance occurs due to '\'-shaped subtree */
-				avltree_rotate_left(traversal);
-			else													/* imbalance occurs due to '>'-shaped subtree */
-				avltree_rotate_rightleft(traversal);
+			if (this->compare(val, (*traversal)->right->val) > 0)
+				avltree_rotate_left(traversal); /* imbalance due to '\'-shaped subtree */
+			else
+				avltree_rotate_rightleft(traversal); /* imbalance due to '>'-shaped subtree */
 		}
 		
-	}
+	} else return;
 	
 	/* recalculating heights */
 	left_height = NODE_HEIGHT((*traversal)->left);
@@ -144,4 +144,78 @@ static void avltree_insert_helper(avltree_T *this, avltree_node **traversal, voi
 
 void avltree_insert(avltree_T *this, void *val) {
 	avltree_insert_helper(this, &this->root, val);
+}
+
+static void avltree_remove_helper(avltree_T *this, avltree_node **traversal, void *val) {
+	int8_t left_height, right_height, balance;
+	if (*traversal == NULL) {
+		return;
+	}
+	
+	if (this->compare(val, (*traversal)->val) < 0) {
+		avltree_remove_helper(this, &(*traversal)->left, val);
+	} else if (this->compare(val, (*traversal)->val) > 0) {
+		avltree_remove_helper(this, &(*traversal)->right, val);
+	} else { /* target deleletion found */
+		
+		if ((*traversal)->left != NULL && (*traversal)->right != NULL) { /* has two children: inner node */
+			avltree_node *minimum = (*traversal)->right;
+			while (minimum->left != NULL) {
+				minimum = minimum->left;
+			}
+			
+			(*traversal)->val = minimum->val;
+			avltree_remove_helper(this, &(*traversal)->right, minimum->val);
+		} else if ((*traversal)->left == NULL && (*traversal)->right == NULL) { /* has no children: leaf node */
+			free(*traversal);
+			*traversal = NULL;
+		} else { /* has either left or right child */
+			avltree_node *connection = ((*traversal)->left != NULL) ? (*traversal)->left : (*traversal)->right;
+			avltree_node *target = *traversal;
+			*traversal = connection;	/* analogous to assigning connection to either parent->left or parent->right */
+			free(target);
+		}
+		
+	}
+	
+	if (*traversal == NULL) {
+		return;
+	}
+	
+	/* recalculating heights */
+	left_height = NODE_HEIGHT((*traversal)->left);
+	right_height = NODE_HEIGHT((*traversal)->right);
+	(*traversal)->height = 1 + MAX(left_height, right_height);
+	
+	/* check if any rotations need to be done */
+	balance = NODE_HEIGHT((*traversal)->left) - NODE_HEIGHT((*traversal)->right);
+	if (balance == 2) {
+			if (NODE_HEIGHT((*traversal)->left->left) - NODE_HEIGHT((*traversal)->left->right) >= 0)
+				avltree_rotate_right(traversal);
+			else
+				avltree_rotate_leftright(traversal);
+	} else if (balance == -2) {
+			if (NODE_HEIGHT((*traversal)->right->left) - NODE_HEIGHT((*traversal)->right->right) <= 0)
+				avltree_rotate_left(traversal);
+			else
+				avltree_rotate_rightleft(traversal);
+	}
+}
+
+void avltree_remove(avltree_T *this, void *val) {
+	avltree_remove_helper(this, &this->root, val);
+}
+
+void *avltree_min(avltree_T *this) {
+	avltree_node *traversal = this->root;
+	while (traversal->left != NULL)
+		traversal = traversal->left;
+	return traversal->val;
+}
+
+void *avltree_max(avltree_T *this) {
+	avltree_node *traversal = this->root;
+	while (traversal->right != NULL)
+		traversal = traversal->right;
+	return traversal->val;
 }
