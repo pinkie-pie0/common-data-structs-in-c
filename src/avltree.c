@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
+#include "deque.h"
 
 #define NODE_HEIGHT(node) (((node) == NULL) ? (-1) : (node->height))
 #define MAX(a, b) (((a) > (b)) ? (a) : (b))
@@ -15,6 +16,11 @@ typedef struct avltree_T {
 		avltree_node *right;
 	} *root;
 } avltree_T;
+
+typedef struct avltree_T_iterator {
+	avltree_T *this;
+	deque_T *stack;
+} avltree_T_iterator;
 
 static avltree_node *alloc_avltree_node(void *val) {
 	avltree_node *node = malloc(sizeof *node);
@@ -50,6 +56,58 @@ static void avltree_delete_subtree(avltree_node *root) {
 void dealloc_avltree(avltree_T *this) {
 	avltree_delete_subtree(this->root);
 	free(this);
+}
+
+avltree_T_iterator *alloc_avltree_iterator(avltree_T *this) {
+	avltree_T_iterator *itr = malloc(sizeof *itr);
+	if (itr == NULL) {
+		fprintf(stderr, "**avltree memory allocation failure** : failed to allocate new iterator\n");
+		dealloc_avltree(this);
+		exit(EXIT_FAILURE);
+	}
+	
+	itr->this = this;
+	itr->stack = alloc_deque();
+	if (this->root != NULL) {
+		deque_push(itr->stack, this->root);
+		while (((avltree_node*)deque_stackpeek(itr->stack))->left != NULL) {
+			deque_push(itr->stack, ((avltree_node*)deque_stackpeek(itr->stack))->left);
+		}
+	}
+	return itr;
+}
+
+void dealloc_avltree_iterator(avltree_T_iterator *itr) {
+	dealloc_deque(itr->stack);
+	free(itr);
+}
+
+int avltree_iterator_hasnext(avltree_T_iterator *itr) {
+	return !deque_isempty(itr->stack);
+}
+
+void *avltree_iterator_next(avltree_T_iterator *itr) {
+	avltree_node *process;
+	void *val;
+	
+	if (!avltree_iterator_hasnext(itr)) {
+		fprintf(stderr, "**avltree iterator failure** : no elements left to iterate\n");
+		dealloc_avltree(itr->this);
+		dealloc_avltree_iterator(itr);
+		exit(EXIT_FAILURE);
+	}
+	
+	process = deque_pop(itr->stack);
+	val = process->val;
+	
+	if (process->right != NULL) {
+		deque_push(itr->stack, process->right);
+		while (((avltree_node*)deque_stackpeek(itr->stack))->left != NULL) {
+			deque_push(itr->stack, ((avltree_node*)deque_stackpeek(itr->stack))->left);
+		}
+	}
+	
+	return val;
 }
 
 static void avltree_rotate_right(avltree_node **rootref) {
