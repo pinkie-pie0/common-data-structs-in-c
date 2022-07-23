@@ -53,12 +53,12 @@ static void avltree_delete_subtree(avltree_node *root) {
 	}
 }
 
-void dealloc_avltree(avltree_ds *this) {
+void dealloc_avltree(avltree_ds *const this) {
 	avltree_delete_subtree(this->root);
 	free(this);
 }
 
-avltree_ds_iterator *alloc_avltree_iterator(avltree_ds *this) {
+avltree_ds_iterator *alloc_avltree_iterator(avltree_ds *const this) {
 	avltree_ds_iterator *itr = malloc(sizeof *itr);
 	if (itr == NULL) {
 		fprintf(stderr, "**avltree memory allocation failure** : failed to allocate new iterator\n");
@@ -77,16 +77,16 @@ avltree_ds_iterator *alloc_avltree_iterator(avltree_ds *this) {
 	return itr;
 }
 
-void dealloc_avltree_iterator(avltree_ds_iterator *itr) {
+void dealloc_avltree_iterator(avltree_ds_iterator *const itr) {
 	dealloc_deque(itr->stack);
 	free(itr);
 }
 
-int avltree_iterator_hasnext(avltree_ds_iterator *itr) {
+int avltree_iterator_hasnext(avltree_ds_iterator *const itr) {
 	return !deque_isempty(itr->stack);
 }
 
-void *avltree_iterator_next(avltree_ds_iterator *itr) {
+void *avltree_iterator_next(avltree_ds_iterator *const itr) {
 	avltree_node *process;
 	void *val;
 	
@@ -110,7 +110,7 @@ void *avltree_iterator_next(avltree_ds_iterator *itr) {
 	return val;
 }
 
-static void avltree_rotate_right(avltree_node **rootref) {
+static void avltree_rotate_right(avltree_node **const rootref) {
 	int8_t left_height, right_height;
 	
 	avltree_node *left = (*rootref)->left;
@@ -129,7 +129,7 @@ static void avltree_rotate_right(avltree_node **rootref) {
 	(*rootref)->height = 1 + MAX(left_height, right_height);
 }
 
-static void avltree_rotate_left(avltree_node **rootref) {
+static void avltree_rotate_left(avltree_node **const rootref) {
 	int8_t left_height, right_height;
 	
 	avltree_node *right = (*rootref)->right;
@@ -158,7 +158,7 @@ static void avltree_rotate_left(avltree_node **rootref) {
 	avltree_rotate_left(rootref); \
 } while (0)
 
-static int avltree_insert_helper(avltree_ds *this, avltree_node **traversal, void *val) {
+static int avltree_insert_helper(avltree_ds *const this, avltree_node **traversal, void *val) {
 	int8_t left_height, right_height;
 	
 	/* base case */
@@ -200,11 +200,11 @@ static int avltree_insert_helper(avltree_ds *this, avltree_node **traversal, voi
 	(*traversal)->height = 1 + MAX(left_height, right_height);
 }
 
-int avltree_insert(avltree_ds *this, void *val) {
+int avltree_insert(avltree_ds *const this, void *val) {
 	return val != NULL ? avltree_insert_helper(this, &this->root, val) : 0;
 }
 
-static int avltree_remove_helper(avltree_ds *this, avltree_node **traversal, void *val) {
+static int avltree_remove_helper(avltree_ds *const this, avltree_node **traversal, void *val) {
 	int8_t left_height, right_height, balance;
 	if (*traversal == NULL) {
 		return 0;
@@ -262,11 +262,11 @@ static int avltree_remove_helper(avltree_ds *this, avltree_node **traversal, voi
 	return 1;
 }
 
-int avltree_remove(avltree_ds *this, void *val) {
+int avltree_remove(avltree_ds *const this, void *val) {
 	return val != NULL ? avltree_remove_helper(this, &this->root, val) : 0;
 }
 
-void *avltree_min(avltree_ds *this) {
+void *avltree_min(avltree_ds *const this) {
 	if (this->root != NULL) {
 		avltree_node *traversal = this->root;
 		while (traversal->left != NULL)
@@ -276,7 +276,7 @@ void *avltree_min(avltree_ds *this) {
 	return NULL;
 }
 
-void *avltree_max(avltree_ds *this) {
+void *avltree_max(avltree_ds *const this) {
 	if (this->root != NULL) {
 		avltree_node *traversal = this->root;
 		while (traversal->right != NULL)

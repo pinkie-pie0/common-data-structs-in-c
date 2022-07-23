@@ -31,7 +31,7 @@ pqueue_ds *alloc_pqueue(int comparator(const void*,const void*)) {
 	return pq;
 }
 
-void dealloc_pqueue(pqueue_ds *this) {
+void dealloc_pqueue(pqueue_ds *const this) {
 	size_t i;
 	hashmap_entry **index_mappings;
 	
@@ -47,7 +47,7 @@ void dealloc_pqueue(pqueue_ds *this) {
 	free(this);
 }
 
-static void reheapify_up(pqueue_ds *this, int initial) {
+static void reheapify_up(pqueue_ds *const this, int initial) {
 	void *temp;
 	int parent = (initial - 1) / 4;
 	while (parent >= 0 && this->compare(this->heap[initial], this->heap[parent]) < 0) {
@@ -63,7 +63,7 @@ static void reheapify_up(pqueue_ds *this, int initial) {
 	}
 }
 
-static void reheapify_down(pqueue_ds *this, int initial) {
+static void reheapify_down(pqueue_ds *const this, int initial) {
 	void *temp;
 	size_t size = this->size;
 	while(1) {
@@ -91,7 +91,7 @@ static void reheapify_down(pqueue_ds *this, int initial) {
 	}
 }
 
-int pqueue_enqueue(pqueue_ds *this, void *element) {
+int pqueue_enqueue(pqueue_ds *const this, void *element) {
 	int *newindex;
 	
 	/* element already exists in priority queue */
@@ -118,7 +118,7 @@ int pqueue_enqueue(pqueue_ds *this, void *element) {
 	return 1;
 }
 
-void *pqueue_dequeue(pqueue_ds *this) {
+void *pqueue_dequeue(pqueue_ds *const this) {
 	void *oldval = NULL;
 	if (this->size != 0) {
 		oldval = this->heap[0];
@@ -140,7 +140,7 @@ void *pqueue_dequeue(pqueue_ds *this) {
 	return oldval;
 }
 
-void pqueue_update(pqueue_ds *this, void *element) {
+void pqueue_update(pqueue_ds *const this, void *element) {
 	int index = *(int*)hashmap_get(this->indexmap, element);
 	int parent = (index - 1) / 4;
 	if (index > 0 && this->compare(this->heap[index], this->heap[parent]) < 0) {
@@ -150,7 +150,7 @@ void pqueue_update(pqueue_ds *this, void *element) {
 	}
 }
 
-void *pqueue_remove(pqueue_ds *this, void *element) {
+void *pqueue_remove(pqueue_ds *const this, void *element) {
 	/* remove element-index mapping from the hashmap first */
 	int last, index = *(int*)hashmap_get(this->indexmap, element);
 	free(hashmap_get(this->indexmap, element));
@@ -173,6 +173,6 @@ void *pqueue_remove(pqueue_ds *this, void *element) {
 	return element;
 }
 
-void *pqueue_peek(pqueue_ds *this) {
+void *pqueue_peek(pqueue_ds *const this) {
 	return this->size != 0 ? this->heap[0] : NULL;
 }

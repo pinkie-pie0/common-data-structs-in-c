@@ -16,7 +16,7 @@ typedef struct hashmap_ds_iterator {
 	hashmap_entry **entries;
 } hashmap_ds_iterator;
 
-hashmap_ds_iterator hashmap_getiterator(hashmap_ds *this) {
+hashmap_ds_iterator hashmap_getiterator(hashmap_ds *const this) {
 	hashmap_ds_iterator itr;
 	itr.index = 0;
 	itr.map = this;
@@ -24,11 +24,11 @@ hashmap_ds_iterator hashmap_getiterator(hashmap_ds *this) {
 	return itr;
 }
 
-int hashmap_iterator_hasnext(hashmap_ds_iterator *itr) {
+int hashmap_iterator_hasnext(hashmap_ds_iterator *const itr) {
 	return itr->index < itr->map->size;
 }
 
-hashmap_entry *hashmap_iterator_next(hashmap_ds_iterator *itr) {
+hashmap_entry *hashmap_iterator_next(hashmap_ds_iterator *const itr) {
 	hashmap_entry *entry = NULL;
 	if (!hashmap_iterator_hasnext(itr)) return NULL;
 	while (entry == NULL || entry == TOMBSTONE) {
@@ -79,7 +79,7 @@ hashmap_ds *alloc_identityhashmap() {
 	return alloc_hashmap(reference_hash, reference_equality);
 }
 
-void dealloc_hashmap(hashmap_ds *this) {
+void dealloc_hashmap(hashmap_ds *const this) {
 	size_t i, capacity;
 	for (i = 0, capacity = this->capacity; i < capacity; i++) {
 		if (this->table[i] != NULL && this->table[i] != TOMBSTONE) free(this->table[i]);
@@ -88,7 +88,7 @@ void dealloc_hashmap(hashmap_ds *this) {
 	free(this);
 }
 
-void *hashmap_put(hashmap_ds *this, void *key, void *value) {
+void *hashmap_put(hashmap_ds *const this, void *key, void *value) {
 	int i = this->hash(key);
 	if (i < 0) i *= -1;
 	i %= this->capacity;
@@ -114,7 +114,7 @@ void *hashmap_put(hashmap_ds *this, void *key, void *value) {
 	return NULL;
 }
 
-void *hashmap_get(hashmap_ds *this, void *key) {
+void *hashmap_get(hashmap_ds *const this, void *key) {
 	int i = this->hash(key);
 	if (i < 0) i *= -1;
 	i %= this->capacity;
@@ -129,7 +129,7 @@ void *hashmap_get(hashmap_ds *this, void *key) {
 	return NULL;
 }
 
-void *hashmap_get_keyref(hashmap_ds *this, void *key) {
+void *hashmap_get_keyref(hashmap_ds *const this, void *key) {
 	int i = this->hash(key);
 	if (i < 0) i *= -1;
 	i %= this->capacity;
@@ -144,7 +144,7 @@ void *hashmap_get_keyref(hashmap_ds *this, void *key) {
 	return NULL;
 }
 
-void *hashmap_remove(hashmap_ds *this, void *key) {
+void *hashmap_remove(hashmap_ds *const this, void *key) {
 	int i = this->hash(key);
 	if (i < 0) i *= -1;
 	i %= this->capacity;
@@ -163,7 +163,7 @@ void *hashmap_remove(hashmap_ds *this, void *key) {
 	return NULL;
 }
 
-hashmap_entry **hashmap_getentries(hashmap_ds *this) {
+hashmap_entry **hashmap_getentries(hashmap_ds *const this) {
 	size_t i, capacity;
 	
 	/* allocate a list of entries + one more slot that indicates the end of a list using NULL*/
