@@ -8,10 +8,10 @@
 
 char letters_array[26];
 char *alphabet = letters_array - 'A';
-hashmap_T *map = NULL;
-priorityqueue_T *pqueue = NULL;
-graph_T *graph = NULL;
-deque_T *deque = NULL;
+hashmap_ds *map = NULL;
+priorityqueue_ds *pqueue = NULL;
+graph_ds *graph = NULL;
+deque_ds *deque = NULL;
 
 int char_comparator(const void *a, const void *b) {
 	char a_ = *(char*)a;

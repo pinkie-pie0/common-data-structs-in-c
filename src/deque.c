@@ -1,13 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-typedef struct deque_T {
+typedef struct deque_ds {
 	size_t head, tail, len, capacity;
 	void **deque;
-} deque_T;
+} deque_ds;
 
-deque_T *alloc_deque(void) {
-	deque_T *deque = malloc(sizeof *deque);
+deque_ds *alloc_deque(void) {
+	deque_ds *deque = malloc(sizeof *deque);
 	if (deque == NULL) {
 		fprintf(stderr, "**deque memory allocation failure** : failed to allocate new deque\n");
 		exit(EXIT_FAILURE);
@@ -20,12 +20,12 @@ deque_T *alloc_deque(void) {
 	return deque;
 }
 
-void dealloc_deque(deque_T *this) {
+void dealloc_deque(deque_ds *this) {
 	free(this->deque);
 	free(this);
 }
 
-static void deque_resize(deque_T *this) {
+static void deque_resize(deque_ds *this) {
 	size_t i_1, i_2, len = this->len, old_capacity = this->capacity;
 	
 	void **new_deque, **old_deque = this->deque;
@@ -48,7 +48,7 @@ static void deque_resize(deque_T *this) {
 	this->tail = old_capacity;
 }
 
-void deque_pushleft(deque_T *this, void *el) {
+void deque_pushleft(deque_ds *this, void *el) {
 	if (this->len == this->capacity) deque_resize(this);
 	this->head = (this->head - 1) & (this->capacity - 1);
 	this->deque[this->head] = el;
@@ -56,7 +56,7 @@ void deque_pushleft(deque_T *this, void *el) {
 }
 
 /* analogous to enqueue and stack push */
-void deque_pushright(deque_T *this, void *el) {
+void deque_pushright(deque_ds *this, void *el) {
 	if (this->len == this->capacity) deque_resize(this);
 	this->deque[this->tail] = el;
 	this->tail = (this->tail + 1) & (this->capacity - 1);
@@ -64,7 +64,7 @@ void deque_pushright(deque_T *this, void *el) {
 }
 
 /* analogous to dequeue */
-void *deque_popleft(deque_T *this) {
+void *deque_popleft(deque_ds *this) {
 	void *el;
 	if (this->len == 0) return NULL;
 	el = this->deque[this->head];
@@ -75,7 +75,7 @@ void *deque_popleft(deque_T *this) {
 }
 
 /* analogus to stack pop */
-void *deque_popright(deque_T *this) {
+void *deque_popright(deque_ds *this) {
 	void *el;
 	if (this->len == 0) return NULL;
 	this->tail = (this->tail - 1) & (this->capacity - 1);
@@ -85,14 +85,14 @@ void *deque_popright(deque_T *this) {
 	return el;
 }
 
-void *deque_peekleft(deque_T *this) {
+void *deque_peekleft(deque_ds *this) {
 	return this->deque[this->head];
 }
 
-void *deque_peekright(deque_T *this) {
+void *deque_peekright(deque_ds *this) {
 	return this->deque[(this->tail - 1) & (this->capacity - 1)];
 }
 
-int deque_isempty(deque_T *this) {
+int deque_isempty(deque_ds *this) {
 	return this->len == 0;
 }

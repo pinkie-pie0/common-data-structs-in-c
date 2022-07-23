@@ -3,32 +3,32 @@
 #define TOMBSTONE ((void*)1)
 
 typedef struct hashmap_entry {void *key; void *value;} hashmap_entry;
-typedef struct hashmap_T {
+typedef struct hashmap_ds {
 	int (*hash)(const void*);
 	int (*is_equals)(const void*, const void*);
 	size_t size, capacity;
 	hashmap_entry **table;
-} hashmap_T;
+} hashmap_ds;
 
-typedef struct hashmap_T_iterator {
+typedef struct hashmap_ds_iterator {
 	size_t index;
-	hashmap_T *map;
+	hashmap_ds *map;
 	hashmap_entry **entries;
-} hashmap_T_iterator;
+} hashmap_ds_iterator;
 
-hashmap_T_iterator hashmap_getiterator(hashmap_T *this) {
-	hashmap_T_iterator itr;
+hashmap_ds_iterator hashmap_getiterator(hashmap_ds *this) {
+	hashmap_ds_iterator itr;
 	itr.index = 0;
 	itr.map = this;
 	itr.entries = this->table;
 	return itr;
 }
 
-int hashmap_iterator_hasnext(hashmap_T_iterator *itr) {
+int hashmap_iterator_hasnext(hashmap_ds_iterator *itr) {
 	return itr->index < itr->map->size;
 }
 
-hashmap_entry *hashmap_iterator_next(hashmap_T_iterator *itr) {
+hashmap_entry *hashmap_iterator_next(hashmap_ds_iterator *itr) {
 	hashmap_entry *entry = NULL;
 	if (!hashmap_iterator_hasnext(itr)) return NULL;
 	while (entry == NULL || entry == TOMBSTONE) {
@@ -47,10 +47,10 @@ static int reference_equality(const void *E_1, const void *E_2) {
 	return E_1 == E_2;
 }
 
-hashmap_T *alloc_hashmap(int hash(const void*), int is_equals(const void*, const void*)) {
+hashmap_ds *alloc_hashmap(int hash(const void*), int is_equals(const void*, const void*)) {
 	size_t i;
 	
-	hashmap_T *map = malloc(sizeof *map);
+	hashmap_ds *map = malloc(sizeof *map);
 	if (map == NULL) {
 		fprintf(stderr, "**hashmap memory allocation failure** : failed to allocate new map\n");
 		exit(EXIT_FAILURE);
@@ -75,11 +75,11 @@ hashmap_T *alloc_hashmap(int hash(const void*), int is_equals(const void*, const
 	return map;
 }
 
-hashmap_T *alloc_identityhashmap() {
+hashmap_ds *alloc_identityhashmap() {
 	return alloc_hashmap(reference_hash, reference_equality);
 }
 
-void dealloc_hashmap(hashmap_T *this) {
+void dealloc_hashmap(hashmap_ds *this) {
 	size_t i, capacity;
 	for (i = 0, capacity = this->capacity; i < capacity; i++) {
 		if (this->table[i] != NULL && this->table[i] != TOMBSTONE) free(this->table[i]);
@@ -88,7 +88,7 @@ void dealloc_hashmap(hashmap_T *this) {
 	free(this);
 }
 
-void *hashmap_put(hashmap_T *this, void *key, void *value) {
+void *hashmap_put(hashmap_ds *this, void *key, void *value) {
 	int i = this->hash(key);
 	if (i < 0) i *= -1;
 	i %= this->capacity;
@@ -114,7 +114,7 @@ void *hashmap_put(hashmap_T *this, void *key, void *value) {
 	return NULL;
 }
 
-void *hashmap_get(hashmap_T *this, void *key) {
+void *hashmap_get(hashmap_ds *this, void *key) {
 	int i = this->hash(key);
 	if (i < 0) i *= -1;
 	i %= this->capacity;
@@ -129,7 +129,7 @@ void *hashmap_get(hashmap_T *this, void *key) {
 	return NULL;
 }
 
-void *hashmap_get_keyref(hashmap_T *this, void *key) {
+void *hashmap_get_keyref(hashmap_ds *this, void *key) {
 	int i = this->hash(key);
 	if (i < 0) i *= -1;
 	i %= this->capacity;
@@ -144,7 +144,7 @@ void *hashmap_get_keyref(hashmap_T *this, void *key) {
 	return NULL;
 }
 
-void *hashmap_remove(hashmap_T *this, void *key) {
+void *hashmap_remove(hashmap_ds *this, void *key) {
 	int i = this->hash(key);
 	if (i < 0) i *= -1;
 	i %= this->capacity;
@@ -163,7 +163,7 @@ void *hashmap_remove(hashmap_T *this, void *key) {
 	return NULL;
 }
 
-hashmap_entry **hashmap_getentries(hashmap_T *this) {
+hashmap_entry **hashmap_getentries(hashmap_ds *this) {
 	size_t i, capacity;
 	
 	/* allocate a list of entries + one more slot that indicates the end of a list using NULL*/

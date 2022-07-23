@@ -7,7 +7,7 @@
 #define MAX(a, b) (((a) > (b)) ? (a) : (b))
 
 typedef struct avltree_node avltree_node;
-typedef struct avltree_T {
+typedef struct avltree_ds {
 	int (*compare)(const void*, const void*);
 	struct avltree_node {
 		void *val;
@@ -15,12 +15,12 @@ typedef struct avltree_T {
 		avltree_node *left;
 		avltree_node *right;
 	} *root;
-} avltree_T;
+} avltree_ds;
 
-typedef struct avltree_T_iterator {
-	avltree_T *this;
-	deque_T *stack;
-} avltree_T_iterator;
+typedef struct avltree_ds_iterator {
+	avltree_ds *this;
+	deque_ds *stack;
+} avltree_ds_iterator;
 
 static avltree_node *alloc_avltree_node(void *val) {
 	avltree_node *node = malloc(sizeof *node);
@@ -33,8 +33,8 @@ static avltree_node *alloc_avltree_node(void *val) {
 	return node;
 }
 
-avltree_T *alloc_avltree(int comparator(const void*, const void*)) {
-	avltree_T *this = malloc(sizeof *this);
+avltree_ds *alloc_avltree(int comparator(const void*, const void*)) {
+	avltree_ds *this = malloc(sizeof *this);
 	if (this == NULL) {
 		fprintf(stderr, "**avltree memory allocation failure** : failed to allocate new avltree\n");
 		exit(EXIT_FAILURE);
@@ -53,13 +53,13 @@ static void avltree_delete_subtree(avltree_node *root) {
 	}
 }
 
-void dealloc_avltree(avltree_T *this) {
+void dealloc_avltree(avltree_ds *this) {
 	avltree_delete_subtree(this->root);
 	free(this);
 }
 
-avltree_T_iterator *alloc_avltree_iterator(avltree_T *this) {
-	avltree_T_iterator *itr = malloc(sizeof *itr);
+avltree_ds_iterator *alloc_avltree_iterator(avltree_ds *this) {
+	avltree_ds_iterator *itr = malloc(sizeof *itr);
 	if (itr == NULL) {
 		fprintf(stderr, "**avltree memory allocation failure** : failed to allocate new iterator\n");
 		dealloc_avltree(this);
@@ -77,16 +77,16 @@ avltree_T_iterator *alloc_avltree_iterator(avltree_T *this) {
 	return itr;
 }
 
-void dealloc_avltree_iterator(avltree_T_iterator *itr) {
+void dealloc_avltree_iterator(avltree_ds_iterator *itr) {
 	dealloc_deque(itr->stack);
 	free(itr);
 }
 
-int avltree_iterator_hasnext(avltree_T_iterator *itr) {
+int avltree_iterator_hasnext(avltree_ds_iterator *itr) {
 	return !deque_isempty(itr->stack);
 }
 
-void *avltree_iterator_next(avltree_T_iterator *itr) {
+void *avltree_iterator_next(avltree_ds_iterator *itr) {
 	avltree_node *process;
 	void *val;
 	
@@ -158,7 +158,7 @@ static void avltree_rotate_left(avltree_node **rootref) {
 	avltree_rotate_left(rootref); \
 } while (0)
 
-static int avltree_insert_helper(avltree_T *this, avltree_node **traversal, void *val) {
+static int avltree_insert_helper(avltree_ds *this, avltree_node **traversal, void *val) {
 	int8_t left_height, right_height;
 	
 	/* base case */
@@ -200,11 +200,11 @@ static int avltree_insert_helper(avltree_T *this, avltree_node **traversal, void
 	(*traversal)->height = 1 + MAX(left_height, right_height);
 }
 
-int avltree_insert(avltree_T *this, void *val) {
+int avltree_insert(avltree_ds *this, void *val) {
 	return val != NULL ? avltree_insert_helper(this, &this->root, val) : 0;
 }
 
-static int avltree_remove_helper(avltree_T *this, avltree_node **traversal, void *val) {
+static int avltree_remove_helper(avltree_ds *this, avltree_node **traversal, void *val) {
 	int8_t left_height, right_height, balance;
 	if (*traversal == NULL) {
 		return 0;
@@ -262,11 +262,11 @@ static int avltree_remove_helper(avltree_T *this, avltree_node **traversal, void
 	return 1;
 }
 
-int avltree_remove(avltree_T *this, void *val) {
+int avltree_remove(avltree_ds *this, void *val) {
 	return val != NULL ? avltree_remove_helper(this, &this->root, val) : 0;
 }
 
-void *avltree_min(avltree_T *this) {
+void *avltree_min(avltree_ds *this) {
 	if (this->root != NULL) {
 		avltree_node *traversal = this->root;
 		while (traversal->left != NULL)
@@ -276,7 +276,7 @@ void *avltree_min(avltree_T *this) {
 	return NULL;
 }
 
-void *avltree_max(avltree_T *this) {
+void *avltree_max(avltree_ds *this) {
 	if (this->root != NULL) {
 		avltree_node *traversal = this->root;
 		while (traversal->right != NULL)

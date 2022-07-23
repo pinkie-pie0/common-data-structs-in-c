@@ -5,19 +5,19 @@
 #include "deque.h"
 
 /* graph abstract data type */
-typedef struct graph_T {
+typedef struct graph_ds {
 	int (*label_hash)(const void*);
 	int (*label_equals)(const void*, const void*);
-	hashmap_T *adj_list;
+	hashmap_ds *adj_list;
 	int num_edges;
-} graph_T;
+} graph_ds;
 
 /* basic unit of the graph */
 typedef struct graph_vertex {
 	void *label;
 	size_t degree;
 	struct graph_vertex *predecessor;
-	graph_T *this;
+	graph_ds *this;
 	double cost;
 	int visited;
 } vertex;
@@ -26,7 +26,7 @@ typedef struct graph_vertex {
 
 enum COST_CONST {ZERO, INF};
 
-static void init_vertex(vertex *v, void *label, graph_T *this) {
+static void init_vertex(vertex *v, void *label, graph_ds *this) {
 	v->label = label;
 	v->degree = 0;
 	v->predecessor = NULL;
@@ -35,11 +35,11 @@ static void init_vertex(vertex *v, void *label, graph_T *this) {
 	v->visited = 0;
 }
 
-static void graph_reset_vertices(graph_T *this, enum COST_CONST val) {
+static void graph_reset_vertices(graph_ds *this, enum COST_CONST val) {
 	double reset_val = (val == INF) ? 1.0/0.0 : 0.0;
 	vertex *current_vertex;
 	hashmap_entry *adj_list_entry;
-	hashmap_T_iterator adj_list_itr = hashmap_getiterator(this->adj_list);
+	hashmap_ds_iterator adj_list_itr = hashmap_getiterator(this->adj_list);
 	
 	while (hashmap_iterator_hasnext(&adj_list_itr)) {
 		adj_list_entry = hashmap_iterator_next(&adj_list_itr);
@@ -50,7 +50,7 @@ static void graph_reset_vertices(graph_T *this, enum COST_CONST val) {
 	}
 }
 
-static vertex *corresponding_vertex(graph_T *this, void *label) {
+static vertex *corresponding_vertex(graph_ds *this, void *label) {
 	vertex v_check;
 	init_vertex(&v_check, label, this);
 	return hashmap_get_keyref(this->adj_list, &v_check);
@@ -75,8 +75,8 @@ static int vertex_equality(const void *V_1, const void *V_2) {
 	return v_1->this->label_equals(v_1->label, v_2->label);
 }
 
-graph_T *alloc_graph(int label_hash(const void*), int label_equals(const void*, const void*)) {
-	graph_T *graph = malloc(sizeof *graph);
+graph_ds *alloc_graph(int label_hash(const void*), int label_equals(const void*, const void*)) {
+	graph_ds *graph = malloc(sizeof *graph);
 	if (graph == NULL) {
 		fprintf(stderr, "**graph memory allocation failure** : failed to allocate new graph\n");
 		exit(EXIT_FAILURE);
@@ -89,7 +89,7 @@ graph_T *alloc_graph(int label_hash(const void*), int label_equals(const void*, 
 	return graph;
 }
 
-void dealloc_graph(graph_T *this) {
+void dealloc_graph(graph_ds *this) {
 	size_t i, j;
 	hashmap_entry **inner_entries;
 	hashmap_entry **outer_entries = hashmap_getentries(this->adj_list);
@@ -116,7 +116,7 @@ void dealloc_graph(graph_T *this) {
 	free(this);
 }
 
-int graph_add_vertex(graph_T *this, void *label) {
+int graph_add_vertex(graph_ds *this, void *label) {
 	vertex *new_vertex = malloc(sizeof *new_vertex);
 	if (new_vertex == NULL) return 0;
 	init_vertex(new_vertex, label, this);
@@ -130,7 +130,7 @@ int graph_add_vertex(graph_T *this, void *label) {
 	return 0;
 }
 
-int graph_add_edge(graph_T *this, void *a, void *b, double weight) {
+int graph_add_edge(graph_ds *this, void *a, void *b, double weight) {
 	vertex *a_v = corresponding_vertex(this, a);
 	vertex *b_v = corresponding_vertex(this, b);
 	if (a_v != NULL && b_v != NULL) {
@@ -166,7 +166,7 @@ int graph_add_edge(graph_T *this, void *a, void *b, double weight) {
 	return 0;
 }
 
-int graph_remove_edge(graph_T *this, void *a, void *b) {
+int graph_remove_edge(graph_ds *this, void *a, void *b) {
 	vertex *a_v = corresponding_vertex(this, a);
 	vertex *b_v = corresponding_vertex(this, b);
 	if (a_v != NULL && b_v != NULL && hashmap_get(hashmap_get(this->adj_list, a_v), b_v) != NULL) {
@@ -185,7 +185,7 @@ int graph_remove_edge(graph_T *this, void *a, void *b) {
 	return 0;
 }
 
-int graph_remove_vertex(graph_T *this, void *label) {
+int graph_remove_vertex(graph_ds *this, void *label) {
 	vertex *removal = corresponding_vertex(this, label);
 	if (removal != NULL) {
 		size_t i;
@@ -204,16 +204,16 @@ int graph_remove_vertex(graph_T *this, void *label) {
 	
 }
 
-int graph_has_edge(graph_T *this, void *a, void *b) {
+int graph_has_edge(graph_ds *this, void *a, void *b) {
 	vertex *a_v = corresponding_vertex(this, a);
 	vertex *b_v = corresponding_vertex(this, b);
 	return a_v != NULL && b_v != NULL ? hashmap_get(hashmap_get(this->adj_list, a_v), b_v) != NULL : 0;
 }
 
-static deque_T *graph_breadth_first_search_internal(graph_T *this, void *origin, int return_labels) {
-	hashmap_T_iterator edge_itr;
+static deque_ds *graph_breadth_first_search_internal(graph_ds *this, void *origin, int return_labels) {
+	hashmap_ds_iterator edge_itr;
 	
-	deque_T *retval, *bfs;
+	deque_ds *retval, *bfs;
 	vertex *process, *origin_v = corresponding_vertex(this, origin);
 	
 	retval = alloc_deque();
@@ -244,13 +244,13 @@ static deque_T *graph_breadth_first_search_internal(graph_T *this, void *origin,
 	return retval;
 }
 
-deque_T *graph_breadth_first_search(graph_T *this, void *origin) {
+deque_ds *graph_breadth_first_search(graph_ds *this, void *origin) {
 	return graph_breadth_first_search_internal(this, origin, 1);
 }
 
-static void graph_depth_first_search_internal(graph_T *this, deque_T *traversal_order, vertex *origin) {
+static void graph_depth_first_search_internal(graph_ds *this, deque_ds *traversal_order, vertex *origin) {
 	vertex *process;
-	hashmap_T_iterator edge_itr = hashmap_getiterator(hashmap_get(this->adj_list, origin));
+	hashmap_ds_iterator edge_itr = hashmap_getiterator(hashmap_get(this->adj_list, origin));
 	
 	origin->visited = 1;
 	deque_push(traversal_order, origin->label);
@@ -263,8 +263,8 @@ static void graph_depth_first_search_internal(graph_T *this, deque_T *traversal_
 	}
 }
 
-deque_T *graph_depth_first_search(graph_T *this, void *origin) {
-	deque_T *retval = alloc_deque();
+deque_ds *graph_depth_first_search(graph_ds *this, void *origin) {
+	deque_ds *retval = alloc_deque();
 	vertex *origin_v = corresponding_vertex(this, origin);
 	graph_reset_vertices(this, ZERO);
 	if (origin_v != NULL) {
@@ -281,12 +281,12 @@ static int largest_degree_comparator(const void *v_1, const void *v_2) {
 	return (degree_1 < degree_2) - (degree_1 > degree_2);
 }
 
-int graph_minimum_colors(graph_T *this, void *origin) {
-	hashmap_T_iterator edge_itr, sub_edge_itr;
+int graph_minimum_colors(graph_ds *this, void *origin) {
+	hashmap_ds_iterator edge_itr, sub_edge_itr;
 	int flag, minimum_colors = 0;
 	
-	deque_T *backed = graph_breadth_first_search_internal(this, origin, 0);
-	priorityqueue_T *cluster = alloc_priorityqueue(largest_degree_comparator);
+	deque_ds *backed = graph_breadth_first_search_internal(this, origin, 0);
+	priorityqueue_ds *cluster = alloc_priorityqueue(largest_degree_comparator);
 	
 	vertex *process, *subprocess;
 	
@@ -332,12 +332,12 @@ int graph_minimum_colors(graph_T *this, void *origin) {
 */
 
 /** implementation of dijkstra's algorithm - BEGIN **/
-double graph_cheapest_path(graph_T *this, void *origin, void *end, deque_T *stack) {
+double graph_cheapest_path(graph_ds *this, void *origin, void *end, deque_ds *stack) {
 	
 	double cheapest = -1;
-	hashmap_T_iterator edge_itr;
+	hashmap_ds_iterator edge_itr;
 	hashmap_entry *current_neighbors;
-	priorityqueue_T *pq;
+	priorityqueue_ds *pq;
 	
 	vertex *process, *neighbor;
 	vertex *origin_v = corresponding_vertex(this, origin);
