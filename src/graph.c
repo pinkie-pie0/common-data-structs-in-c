@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "hashmap.h"
-#include "priorityqueue.h"
+#include "pqueue.h"
 #include "deque.h"
 
 /* graph abstract data type */
@@ -286,17 +286,17 @@ int graph_minimum_colors(graph_ds *this, void *origin) {
 	int flag, minimum_colors = 0;
 	
 	deque_ds *backed = graph_breadth_first_search_internal(this, origin, 0);
-	priorityqueue_ds *cluster = alloc_priorityqueue(largest_degree_comparator);
+	pqueue_ds *cluster = alloc_pqueue(largest_degree_comparator);
 	
 	vertex *process, *subprocess;
 	
 	while (!deque_isempty(backed)) {
-		priorityqueue_enqueue(cluster, deque_dequeue(backed));
+		pqueue_enqueue(cluster, deque_dequeue(backed));
 	}
 	
 	graph_reset_vertices(this, ZERO);
-	while (priorityqueue_peek(cluster) != NULL) {
-		process = priorityqueue_dequeue(cluster);
+	while (pqueue_peek(cluster) != NULL) {
+		process = pqueue_dequeue(cluster);
 		process->visited = 1;
 		flag = 0;
 		minimum_colors++;
@@ -320,7 +320,7 @@ int graph_minimum_colors(graph_ds *this, void *origin) {
 			
 			if (flag) {
 				subprocess->visited = 1;
-				priorityqueue_remove(cluster, subprocess);
+				pqueue_remove(cluster, subprocess);
 				process = subprocess;
 			}
 			
@@ -337,7 +337,7 @@ double graph_cheapest_path(graph_ds *this, void *origin, void *end, deque_ds *st
 	double cheapest = -1;
 	hashmap_ds_iterator edge_itr;
 	hashmap_entry *current_neighbors;
-	priorityqueue_ds *pq;
+	pqueue_ds *pq;
 	
 	vertex *process, *neighbor;
 	vertex *origin_v = corresponding_vertex(this, origin);
@@ -349,13 +349,13 @@ double graph_cheapest_path(graph_ds *this, void *origin, void *end, deque_ds *st
 	graph_reset_vertices(this, INF);
 	origin_v->cost = 0.0;
 	
-	pq = alloc_priorityqueue(cost_comparator);
-	priorityqueue_enqueue(pq, origin_v);
+	pq = alloc_pqueue(cost_comparator);
+	pqueue_enqueue(pq, origin_v);
 	/* dirty way of checking if the queue is empty */
-	while (priorityqueue_peek(pq) != NULL) {
+	while (pqueue_peek(pq) != NULL) {
 		double new_distance;
 		
-		process = priorityqueue_dequeue(pq);
+		process = pqueue_dequeue(pq);
 		process->visited = 1;
 		
 		if (process == end_v) {
@@ -371,19 +371,19 @@ double graph_cheapest_path(graph_ds *this, void *origin, void *end, deque_ds *st
 			
 			if (!neighbor->visited) {
 				/* this won't have effect if the vertex is already in PQ */
-				priorityqueue_enqueue(pq, neighbor);
+				pqueue_enqueue(pq, neighbor);
 				new_distance += process->cost;
 				
 				/* hint to update priority */
 				if (new_distance < neighbor->cost) {
 					neighbor->cost = new_distance;
 					neighbor->predecessor = process;
-					priorityqueue_update(pq, neighbor);
+					pqueue_update(pq, neighbor);
 				}
 			}
 		}
 	}
-	dealloc_priorityqueue(pq);
+	dealloc_pqueue(pq);
 	
 	if (stack != NULL) {
 		vertex *traversal = end_v;

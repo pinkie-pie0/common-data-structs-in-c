@@ -2,15 +2,15 @@
 #include <stdlib.h>
 #include "hashmap.h"
 
-typedef struct priorityqueue_ds {
+typedef struct pqueue_ds {
 	int (*compare)(const void*, const void*);
 	size_t size, capacity;
 	hashmap_ds *indexmap;
 	void **heap;
-} priorityqueue_ds;
+} pqueue_ds;
 
-priorityqueue_ds *alloc_priorityqueue(int comparator(const void*,const void*)) {
-	priorityqueue_ds *pq = malloc(sizeof *pq);
+pqueue_ds *alloc_pqueue(int comparator(const void*,const void*)) {
+	pqueue_ds *pq = malloc(sizeof *pq);
 	if (pq == NULL) {
 		fprintf(stderr, "**priorityqueue memory allocation failure** : failed to allocate new priorityqueue\n");
 		exit(EXIT_FAILURE);
@@ -31,7 +31,7 @@ priorityqueue_ds *alloc_priorityqueue(int comparator(const void*,const void*)) {
 	return pq;
 }
 
-void dealloc_priorityqueue(priorityqueue_ds *this) {
+void dealloc_pqueue(pqueue_ds *this) {
 	size_t i;
 	hashmap_entry **index_mappings;
 	
@@ -47,7 +47,7 @@ void dealloc_priorityqueue(priorityqueue_ds *this) {
 	free(this);
 }
 
-static void reheapify_up(priorityqueue_ds *this, int initial) {
+static void reheapify_up(pqueue_ds *this, int initial) {
 	void *temp;
 	int parent = (initial - 1) / 4;
 	while (parent >= 0 && this->compare(this->heap[initial], this->heap[parent]) < 0) {
@@ -63,7 +63,7 @@ static void reheapify_up(priorityqueue_ds *this, int initial) {
 	}
 }
 
-static void reheapify_down(priorityqueue_ds *this, int initial) {
+static void reheapify_down(pqueue_ds *this, int initial) {
 	void *temp;
 	size_t size = this->size;
 	while(1) {
@@ -91,7 +91,7 @@ static void reheapify_down(priorityqueue_ds *this, int initial) {
 	}
 }
 
-int priorityqueue_enqueue(priorityqueue_ds *this, void *element) {
+int pqueue_enqueue(pqueue_ds *this, void *element) {
 	int *newindex;
 	
 	/* element already exists in priority queue */
@@ -118,7 +118,7 @@ int priorityqueue_enqueue(priorityqueue_ds *this, void *element) {
 	return 1;
 }
 
-void *priorityqueue_dequeue(priorityqueue_ds *this) {
+void *pqueue_dequeue(pqueue_ds *this) {
 	void *oldval = NULL;
 	if (this->size != 0) {
 		oldval = this->heap[0];
@@ -140,7 +140,7 @@ void *priorityqueue_dequeue(priorityqueue_ds *this) {
 	return oldval;
 }
 
-void priorityqueue_update(priorityqueue_ds *this, void *element) {
+void pqueue_update(pqueue_ds *this, void *element) {
 	int index = *(int*)hashmap_get(this->indexmap, element);
 	int parent = (index - 1) / 4;
 	if (index > 0 && this->compare(this->heap[index], this->heap[parent]) < 0) {
@@ -150,7 +150,7 @@ void priorityqueue_update(priorityqueue_ds *this, void *element) {
 	}
 }
 
-void *priorityqueue_remove(priorityqueue_ds *this, void *element) {
+void *pqueue_remove(pqueue_ds *this, void *element) {
 	/* remove element-index mapping from the hashmap first */
 	int last, index = *(int*)hashmap_get(this->indexmap, element);
 	free(hashmap_get(this->indexmap, element));
@@ -165,14 +165,14 @@ void *priorityqueue_remove(priorityqueue_ds *this, void *element) {
 		this->heap[this->size] = NULL;
 		*(int*)hashmap_get(this->indexmap, this->heap[index]) = index;
 	
-		/* call priorityqueue_update */
-		priorityqueue_update(this, this->heap[index]);
+		/* call pqueue_update */
+		pqueue_update(this, this->heap[index]);
 	} else {
 		this->heap[last] = NULL;
 	}
 	return element;
 }
 
-void *priorityqueue_peek(priorityqueue_ds *this) {
+void *pqueue_peek(pqueue_ds *this) {
 	return this->size != 0 ? this->heap[0] : NULL;
 }

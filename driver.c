@@ -2,14 +2,14 @@
 #include <stdlib.h>
 #include <time.h>
 #include "hashmap.h"
-#include "priorityqueue.h"
+#include "pqueue.h"
 #include "graph.h"
 #include "deque.h"
 
 char letters_array[26];
 char *alphabet = letters_array - 'A';
 hashmap_ds *map = NULL;
-priorityqueue_ds *pqueue = NULL;
+pqueue_ds *pqueue = NULL;
 graph_ds *graph = NULL;
 deque_ds *deque = NULL;
 
@@ -41,7 +41,7 @@ void test_graph(void);
 #define alloc_ds() \
 	do { \
 		map = alloc_hashmap(char_hash, char_equals); \
-		pqueue = alloc_priorityqueue(char_comparator); \
+		pqueue = alloc_pqueue(char_comparator); \
 		graph = alloc_graph(char_hash, char_equals); \
 		deque = alloc_deque(); \
 	} while (0)
@@ -49,7 +49,7 @@ void test_graph(void);
 #define free_ds() \
 	do { \
 		dealloc_hashmap(map); map = NULL; \
-		dealloc_priorityqueue(pqueue); pqueue = NULL; \
+		dealloc_pqueue(pqueue); pqueue = NULL; \
 		dealloc_graph(graph); graph = NULL; \
 		dealloc_deque(deque); deque = NULL; \
 	} while (0)
@@ -60,8 +60,8 @@ void test_graph(void);
  * file: driver.c         line 073: test_graph();
  * file: driver.c         line 198: print_shortest_path('B', 'A');
  * file: driver.c         line 163: graph_cheapest_path(graph, &alphabet[from], &alphabet[to], deque);
- * file: graph.c          line 358: process = priorityqueue_dequeue(pq);
- * file: priorityqueue.c  line 136: *(int*)hashmap_get(this->indexmap, this->heap[0]) = 0;
+ * file: graph.c          line 358: process = pqueue_dequeue(pq);
+ * file: pqueue.c  line 136: *(int*)hashmap_get(this->indexmap, this->heap[0]) = 0;
  */
 int main(void) {
 	srand(time(NULL));
@@ -148,13 +148,13 @@ void test_pqueue(void) {
 	/* Enqueuing random letters */
 	while (i-- > 0) {
 		letter = (rand() % 25) + 'A';
-		priorityqueue_enqueue(pqueue, &alphabet[letter]);
+		pqueue_enqueue(pqueue, &alphabet[letter]);
 		printf("enqueued '%c'\n", letter);
 	}
-	printf("front of the queue: %c\n", *(char*)priorityqueue_peek(pqueue));
+	printf("front of the queue: %c\n", *(char*)pqueue_peek(pqueue));
 	
-	while(priorityqueue_peek(pqueue) != NULL) {
-		printf("dequeued '%c'\n", *(char*)priorityqueue_dequeue(pqueue));
+	while(pqueue_peek(pqueue) != NULL) {
+		printf("dequeued '%c'\n", *(char*)pqueue_dequeue(pqueue));
 	}
 	printf("=== TESTING DONE  === \n\n");
 }
