@@ -10,12 +10,12 @@ typedef struct deque_ds deque_ds;
 #define deque_queuepeek(this) deque_peekleft(this)
 
 deque_ds *alloc_deque(void);
-void dealloc_deque(deque_ds *this);
-void deque_pushleft(deque_ds *this, void *el);
-void deque_pushright(deque_ds *this, void *el);
-void *deque_popleft(deque_ds *this);
-void *deque_popright(deque_ds *this);
-void *deque_peekleft(deque_ds *this);
-void *deque_peekright(deque_ds *this);
-int deque_isempty(deque_ds *this);
+void dealloc_deque(deque_ds*);
+void deque_pushleft(deque_ds*, void *el);
+void deque_pushright(deque_ds*, void *el);
+void *deque_popleft(deque_ds*);
+void *deque_popright(deque_ds*);
+void *deque_peekleft(deque_ds*);
+void *deque_peekright(deque_ds*);
+int deque_isempty(deque_ds*);
 #endif

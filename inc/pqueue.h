@@ -3,10 +3,10 @@
 typedef struct pqueue_ds pqueue_ds;
 
 pqueue_ds *alloc_pqueue(int comparator(const void*,const void*));
-void dealloc_pqueue(pqueue_ds *this);
-int pqueue_enqueue(pqueue_ds *this, void *element);
-void *pqueue_dequeue(pqueue_ds *this);
-void pqueue_update(pqueue_ds *this, void *element);
-void *pqueue_peek(pqueue_ds *this);
-void *pqueue_remove(pqueue_ds *this, void *element);
+void dealloc_pqueue(pqueue_ds*);
+int pqueue_enqueue(pqueue_ds*, void *element);
+void *pqueue_dequeue(pqueue_ds*);
+void pqueue_update(pqueue_ds*, void *element);
+void *pqueue_peek(pqueue_ds*);
+void *pqueue_remove(pqueue_ds*, void *element);
 #endif
