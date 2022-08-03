@@ -5,12 +5,14 @@
 #define DS_NAME "hashmap"
 #include "err/ds_assert.h"
 
-typedef struct hashmap_entry {void *key; void *value;} hashmap_entry;
+typedef struct hashmap_entry hashmap_entry;
 typedef struct hashmap_ds {
 	int (*hash)(const void*);
 	int (*is_equals)(const void*, const void*);
 	size_t size, capacity;
-	hashmap_entry **table;
+	struct hashmap_entry {
+		void *key, *value;
+	} **table;
 } hashmap_ds;
 
 typedef struct hashmap_ds_iterator {
@@ -53,22 +55,22 @@ static int reference_equality(const void *E_1, const void *E_2) {
 hashmap_ds *alloc_hashmap(int hash(const void*), int is_equals(const void*, const void*)) {
 	size_t i;
 	
-	hashmap_ds *map = malloc(sizeof *map);
-	DS_ASSERT(map != NULL, "failed to allocate memory for new " DS_NAME);
+	hashmap_ds *this = malloc(sizeof *this);
+	DS_ASSERT(this != NULL, "failed to allocate memory for new " DS_NAME);
 	
-	map->hash = hash;
-	map->is_equals = is_equals;
+	this->hash = hash;
+	this->is_equals = is_equals;
 	
-	map->size = 0;
-	map->capacity = 64;
-	map->table = malloc(64 * sizeof *map->table);
-	DS_ASSERT(map->table != NULL, "failed to allocate memory for the " DS_NAME "'s table");
+	this->size = 0;
+	this->capacity = 64;
+	this->table = malloc(64 * sizeof *this->table);
+	DS_ASSERT(this->table != NULL, "failed to allocate memory for the " DS_NAME "'s table");
 	
 	for (i = 0; i < 64; i++) {
-		map->table[i] = NULL;
+		this->table[i] = NULL;
 	}
 	
-	return map;
+	return this;
 }
 
 hashmap_ds *alloc_identityhashmap() {

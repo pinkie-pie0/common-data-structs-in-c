@@ -79,14 +79,14 @@ static int vertex_equality(const void *V_1, const void *V_2) {
 }
 
 graph_ds *alloc_graph(int label_hash(const void*), int label_equals(const void*, const void*)) {
-	graph_ds *graph = malloc(sizeof *graph);
-	DS_ASSERT(graph != NULL, "failed to allocate memory for new " DS_NAME);
+	graph_ds *this = malloc(sizeof *this);
+	DS_ASSERT(this != NULL, "failed to allocate memory for new " DS_NAME);
 	
-	graph->label_hash = label_hash;
-	graph->label_equals = label_equals;
-	graph->adj_list = alloc_hashmap(vertex_hash, vertex_equality);
-	graph->num_edges = 0;
-	return graph;
+	this->label_hash = label_hash;
+	this->label_equals = label_equals;
+	this->adj_list = alloc_hashmap(vertex_hash, vertex_equality);
+	this->num_edges = 0;
+	return this;
 }
 
 void dealloc_graph(graph_ds *const this) {

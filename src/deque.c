@@ -10,15 +10,15 @@ typedef struct deque_ds {
 } deque_ds;
 
 deque_ds *alloc_deque(void) {
-	deque_ds *deque = malloc(sizeof *deque);
-	DS_ASSERT(deque != NULL, "failed to allocate memory for new " DS_NAME);
+	deque_ds *this = malloc(sizeof *this);
+	DS_ASSERT(this != NULL, "failed to allocate memory for new " DS_NAME);
 	
-	deque->head = 0;
-	deque->tail = 0;
-	deque->len = 0;
-	deque->capacity = 16;
-	deque->deque = malloc(16 * sizeof *deque->deque);
-	return deque;
+	this->head = 0;
+	this->tail = 0;
+	this->len = 0;
+	this->capacity = 16;
+	this->deque = malloc(16 * sizeof *this->deque);
+	return this;
 }
 
 void dealloc_deque(deque_ds *const this) {

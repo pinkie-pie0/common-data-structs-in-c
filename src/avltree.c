@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdint.h>
 #include "deque.h"
 
 #define DS_NAME "avltree"
@@ -14,7 +13,7 @@ typedef struct avltree_ds {
 	int (*compare)(const void*, const void*);
 	struct avltree_node {
 		void *val;
-		int8_t height;
+		int height;
 		avltree_node *left;
 		avltree_node *right;
 	} *root;
@@ -108,7 +107,7 @@ void *avltree_iterator_next(avltree_ds_iterator *const itr) {
 #define DS_NAME "avltree"
 
 static void avltree_rotate_right(avltree_node **const rootref) {
-	int8_t left_height, right_height;
+	int left_height, right_height;
 	
 	avltree_node *left = (*rootref)->left;
 	avltree_node *left_right = (*rootref)->left->right;
@@ -127,7 +126,7 @@ static void avltree_rotate_right(avltree_node **const rootref) {
 }
 
 static void avltree_rotate_left(avltree_node **const rootref) {
-	int8_t left_height, right_height;
+	int left_height, right_height;
 	
 	avltree_node *right = (*rootref)->right;
 	avltree_node *right_left = (*rootref)->right->left;
@@ -156,7 +155,7 @@ static void avltree_rotate_left(avltree_node **const rootref) {
 } while (0)
 
 static int avltree_insert_helper(avltree_ds *const this, avltree_node **traversal, void *val) {
-	int8_t left_height, right_height;
+	int left_height, right_height;
 	
 	/* base case */
 	if (*traversal == NULL) {
@@ -198,7 +197,7 @@ int avltree_insert(avltree_ds *const this, void *val) {
 }
 
 static int avltree_remove_helper(avltree_ds *const this, avltree_node **traversal, void *val) {
-	int8_t left_height, right_height, balance;
+	int left_height, right_height, balance;
 	if (*traversal == NULL) {
 		return 0;
 	}

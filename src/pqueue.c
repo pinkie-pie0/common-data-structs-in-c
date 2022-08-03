@@ -13,17 +13,17 @@ typedef struct pqueue_ds {
 } pqueue_ds;
 
 pqueue_ds *alloc_pqueue(int comparator(const void*,const void*)) {
-	pqueue_ds *pq = malloc(sizeof *pq);
-	DS_ASSERT(pq != NULL, "failed to allocate memory for new " DS_NAME);
+	pqueue_ds *this = malloc(sizeof *this);
+	DS_ASSERT(this != NULL, "failed to allocate memory for new " DS_NAME);
 	
-	pq->size = 0;
-	pq->capacity = 16;
-	pq->compare = comparator;
-	pq->heap = malloc(16 * sizeof *pq->heap);
-	DS_ASSERT(pq->heap != NULL, "failed to allocate the heap");
+	this->size = 0;
+	this->capacity = 16;
+	this->compare = comparator;
+	this->heap = malloc(16 * sizeof *this->heap);
+	DS_ASSERT(this->heap != NULL, "failed to allocate the heap");
 	
-	pq->indexmap = alloc_identityhashmap();
-	return pq;
+	this->indexmap = alloc_identityhashmap();
+	return this;
 }
 
 void dealloc_pqueue(pqueue_ds *const this) {
