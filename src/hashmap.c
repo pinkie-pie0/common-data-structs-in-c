@@ -2,6 +2,9 @@
 #include <stdlib.h>
 #define TOMBSTONE ((void*)1)
 
+#define DS_NAME "hashmap"
+#include "err/ds_assert.h"
+
 typedef struct hashmap_entry {void *key; void *value;} hashmap_entry;
 typedef struct hashmap_ds {
 	int (*hash)(const void*);
@@ -51,22 +54,15 @@ hashmap_ds *alloc_hashmap(int hash(const void*), int is_equals(const void*, cons
 	size_t i;
 	
 	hashmap_ds *map = malloc(sizeof *map);
-	if (map == NULL) {
-		fprintf(stderr, "**hashmap memory allocation failure** : failed to allocate new map\n");
-		exit(EXIT_FAILURE);
-	}
+	DS_ASSERT(map != NULL, "failed to allocate memory for new " DS_NAME);
+	
 	map->hash = hash;
 	map->is_equals = is_equals;
 	
 	map->size = 0;
 	map->capacity = 64;
 	map->table = malloc(64 * sizeof *map->table);
-	
-	if (map->table == NULL) {
-		free(map);
-		fprintf(stderr, "**hashmap memory allocation failure** : failed to allocate a table\n");
-		exit(EXIT_FAILURE);
-	}
+	DS_ASSERT(map->table != NULL, "failed to allocate memory for the " DS_NAME "'s table");
 	
 	for (i = 0; i < 64; i++) {
 		map->table[i] = NULL;
@@ -103,11 +99,8 @@ void *hashmap_put(hashmap_ds *const this, void *key, void *value) {
 	}
 	
 	this->table[i] = malloc(sizeof *this->table[i]);
-	if (this->table[i] == NULL) {
-		dealloc_hashmap(this);
-		fprintf(stderr, "**hashmap memory allocation failure ** : failed to allocate a table entry\n");
-		exit(EXIT_FAILURE);
-	}
+	DS_ASSERT(this->table[i] != NULL, "failed to allocate memory for a new table entry");
+	
 	this->table[i]->key = key;
 	this->table[i]->value = value;
 	this->size++;
@@ -168,11 +161,7 @@ hashmap_entry **hashmap_getentries(hashmap_ds *const this) {
 	
 	/* allocate a list of entries + one more slot that indicates the end of a list using NULL*/
 	hashmap_entry **iteration, **entries = malloc((this->size+1) * sizeof *entries);
-	if (entries == NULL) {
-		dealloc_hashmap(this);
-		fprintf(stderr, "**hashmap memory allocation failure ** : failed to allocate a list of entries\n");
-		exit(EXIT_FAILURE);
-	}
+	DS_ASSERT(entries != NULL, "failed to allocate a list of entries");
 	
 	entries[this->size] = NULL;
 	iteration = entries;

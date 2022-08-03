@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define DS_NAME "deque"
+#include "err/ds_assert.h"
+
 typedef struct deque_ds {
 	size_t head, tail, len, capacity;
 	void **deque;
@@ -8,10 +11,8 @@ typedef struct deque_ds {
 
 deque_ds *alloc_deque(void) {
 	deque_ds *deque = malloc(sizeof *deque);
-	if (deque == NULL) {
-		fprintf(stderr, "**deque memory allocation failure** : failed to allocate new deque\n");
-		exit(EXIT_FAILURE);
-	}
+	DS_ASSERT(deque != NULL, "failed to allocate memory for new " DS_NAME);
+	
 	deque->head = 0;
 	deque->tail = 0;
 	deque->len = 0;
@@ -31,12 +32,7 @@ static void deque_resize(deque_ds *const this) {
 	void **new_deque, **old_deque = this->deque;
 	this->capacity <<= 1;
 	new_deque = malloc(this->capacity * sizeof *new_deque);
-	
-	if (new_deque == NULL) {
-		dealloc_deque(this);
-		fprintf(stderr, "**deque memory allocation failure** : failed to expand the deque\n");
-		exit(EXIT_FAILURE);
-	}
+	DS_ASSERT(new_deque != NULL, "failed to allocate memory for expanding the " DS_NAME);
 	
 	for (i_1 = this->head, i_2 = 0; i_2 < len; i_1 = (i_1 + 1) & (old_capacity - 1), i_2++) {
 		new_deque[i_2] = old_deque[i_1];

@@ -4,6 +4,9 @@
 #include "pqueue.h"
 #include "deque.h"
 
+#define DS_NAME "graph"
+#include "err/ds_assert.h"
+
 /* graph abstract data type */
 typedef struct graph_ds {
 	int (*label_hash)(const void*);
@@ -77,10 +80,7 @@ static int vertex_equality(const void *V_1, const void *V_2) {
 
 graph_ds *alloc_graph(int label_hash(const void*), int label_equals(const void*, const void*)) {
 	graph_ds *graph = malloc(sizeof *graph);
-	if (graph == NULL) {
-		fprintf(stderr, "**graph memory allocation failure** : failed to allocate new graph\n");
-		exit(EXIT_FAILURE);
-	}
+	DS_ASSERT(graph != NULL, "failed to allocate memory for new " DS_NAME);
 	
 	graph->label_hash = label_hash;
 	graph->label_equals = label_equals;

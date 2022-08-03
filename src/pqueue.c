@@ -2,6 +2,9 @@
 #include <stdlib.h>
 #include "hashmap.h"
 
+#define DS_NAME "pqueue"
+#include "err/ds_assert.h"
+
 typedef struct pqueue_ds {
 	int (*compare)(const void*, const void*);
 	size_t size, capacity;
@@ -11,21 +14,13 @@ typedef struct pqueue_ds {
 
 pqueue_ds *alloc_pqueue(int comparator(const void*,const void*)) {
 	pqueue_ds *pq = malloc(sizeof *pq);
-	if (pq == NULL) {
-		fprintf(stderr, "**priorityqueue memory allocation failure** : failed to allocate new priorityqueue\n");
-		exit(EXIT_FAILURE);
-	}
+	DS_ASSERT(pq != NULL, "failed to allocate memory for new " DS_NAME);
 	
 	pq->size = 0;
 	pq->capacity = 16;
 	pq->compare = comparator;
 	pq->heap = malloc(16 * sizeof *pq->heap);
-	
-	if (pq->heap == NULL) {
-		free(pq);
-		fprintf(stderr, "**priorityqueue memory allocation failure** : failed to allocate the heap\n");
-		exit(EXIT_FAILURE);
-	}
+	DS_ASSERT(pq->heap != NULL, "failed to allocate the heap");
 	
 	pq->indexmap = alloc_identityhashmap();
 	return pq;
@@ -99,13 +94,9 @@ int pqueue_enqueue(pqueue_ds *const this, void *element) {
 	
 	if (this->size >= this->capacity) {
 		size_t new_capacity = this->capacity * 2;
-		void **oldheap = this->heap;
 		this->heap = realloc(this->heap, new_capacity * sizeof *this->heap);
-		if (this->heap == NULL) {
-			free(oldheap);
-			fprintf(stderr, "**priorityqueue memory allocation failure** : failed to expand the heap\n");
-			exit(EXIT_FAILURE);
-		}
+		DS_ASSERT(this->heap != NULL, "failed to expand the heap");
+
 		this->capacity = new_capacity;
 	}
 	this->heap[this->size++] = element;

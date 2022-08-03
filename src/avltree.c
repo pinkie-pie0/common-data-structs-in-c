@@ -3,6 +3,9 @@
 #include <stdint.h>
 #include "deque.h"
 
+#define DS_NAME "avltree"
+#include "err/ds_assert.h"
+
 #define NODE_HEIGHT(node) (((node) == NULL) ? (-1) : (node->height))
 #define MAX(a, b) (((a) > (b)) ? (a) : (b))
 
@@ -35,10 +38,7 @@ static avltree_node *alloc_avltree_node(void *val) {
 
 avltree_ds *alloc_avltree(int comparator(const void*, const void*)) {
 	avltree_ds *this = malloc(sizeof *this);
-	if (this == NULL) {
-		fprintf(stderr, "**avltree memory allocation failure** : failed to allocate new avltree\n");
-		exit(EXIT_FAILURE);
-	}
+	DS_ASSERT(this != NULL, "failed to allocate memory for new " DS_NAME);
 
 	this->compare = comparator;
 	this->root = NULL;
@@ -58,13 +58,12 @@ void dealloc_avltree(avltree_ds *const this) {
 	free(this);
 }
 
+#undef DS_NAME
+#define DS_NAME "avltree iterator"
+
 avltree_ds_iterator *alloc_avltree_iterator(avltree_ds *const this) {
 	avltree_ds_iterator *itr = malloc(sizeof *itr);
-	if (itr == NULL) {
-		fprintf(stderr, "**avltree memory allocation failure** : failed to allocate new iterator\n");
-		dealloc_avltree(this);
-		exit(EXIT_FAILURE);
-	}
+	DS_ASSERT(itr != NULL, "failed to allocate memory for new " DS_NAME);
 	
 	itr->this = this;
 	itr->stack = alloc_deque();
@@ -90,12 +89,7 @@ void *avltree_iterator_next(avltree_ds_iterator *const itr) {
 	avltree_node *process;
 	void *val;
 	
-	if (!avltree_iterator_hasnext(itr)) {
-		fprintf(stderr, "**avltree iterator failure** : no elements left to iterate\n");
-		dealloc_avltree(itr->this);
-		dealloc_avltree_iterator(itr);
-		exit(EXIT_FAILURE);
-	}
+	DS_ASSERT(avltree_iterator_hasnext(itr), "no elements left to iterate");
 	
 	process = deque_pop(itr->stack);
 	val = process->val;
@@ -109,6 +103,9 @@ void *avltree_iterator_next(avltree_ds_iterator *const itr) {
 	
 	return val;
 }
+
+#undef DS_NAME
+#define DS_NAME "avltree"
 
 static void avltree_rotate_right(avltree_node **const rootref) {
 	int8_t left_height, right_height;
@@ -164,11 +161,7 @@ static int avltree_insert_helper(avltree_ds *const this, avltree_node **traversa
 	/* base case */
 	if (*traversal == NULL) {
 		*traversal = alloc_avltree_node(val);
-		if (*traversal == NULL) {
-			fprintf(stderr, "**avltree memory allocation failure** : failed to allocate new node\n");
-			dealloc_avltree(this);
-			exit(EXIT_FAILURE);
-		}
+		DS_ASSERT(*traversal != NULL, "failed to allocate new memory for new node");
 		return 1;
 	}
 	
