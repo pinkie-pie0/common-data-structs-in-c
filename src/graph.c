@@ -118,7 +118,7 @@ void dealloc_graph(graph_ds *const this) {
 
 int graph_add_vertex(graph_ds *const this, void *label) {
 	vertex *new_vertex = malloc(sizeof *new_vertex);
-	if (new_vertex == NULL) return 0;
+	DS_ASSERT(new_vertex != NULL, "failed to allocate memory for new vertex");
 	init_vertex(new_vertex, label, this);
 	
 	if (hashmap_get(this->adj_list, new_vertex) == NULL) {
@@ -139,22 +139,12 @@ int graph_add_edge(graph_ds *const this, void *a, void *b, double weight) {
 		if (hashmap_get(hashmap_get(this->adj_list, a_v), b_v) != NULL) return 0;
 		
 		vertex_weight = malloc(sizeof *vertex_weight);
-		if (vertex_weight == NULL) {
-			dealloc_graph(this);
-			fprintf(stderr, "**graph memory allocation failure** : failed to allocate an edge weight\n");
-			exit(EXIT_FAILURE);
-		}
-		
+		DS_ASSERT(vertex_weight != NULL, "failed to allocate memory for new edge weight connecting a to b");
 		*vertex_weight = weight;
 		hashmap_put(hashmap_get(this->adj_list, a_v), b_v, vertex_weight);
 		
 		vertex_weight = malloc(sizeof *vertex_weight);
-		if (vertex_weight == NULL) {
-			dealloc_graph(this);
-			fprintf(stderr, "**graph memory allocation failure** : failed to allocate an edge weight\n");
-			exit(EXIT_FAILURE);
-		}
-		
+		DS_ASSERT(vertex_weight != NULL, "failed to allocate memory for new edge weight connecting b to a");
 		*vertex_weight = weight;
 		hashmap_put(hashmap_get(this->adj_list, b_v), a_v, vertex_weight);
 		
