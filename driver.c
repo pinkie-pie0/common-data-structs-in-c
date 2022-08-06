@@ -54,15 +54,6 @@ void test_graph(void);
 		dealloc_deque(deque); deque = NULL; \
 	} while (0)
 
-/* Potential source of segmentation fault (in order of calls):
- * This segfault only happens sometimes. to replicate it I ran "./untilFail ./driver" which repeatedly runs the program until a non-zero exit occurs.
- *
- * file: driver.c         line 073: test_graph();
- * file: driver.c         line 198: print_shortest_path('B', 'A');
- * file: driver.c         line 163: graph_cheapest_path(graph, &alphabet[from], &alphabet[to], deque);
- * file: graph.c          line 358: process = pqueue_dequeue(pq);
- * file: pqueue.c  line 136: *(int*)hashmap_get(this->indexmap, this->heap[0]) = 0;
- */
 int main(void) {
 	srand(time(NULL));
 	init_alphabet();
@@ -170,7 +161,7 @@ void print_shortest_path(int from, int to) {
 }
 
 void test_graph(void) {
-	int i/*, j*/;
+	int i, j;
 	printf("=== TESTING UNDIRECTED GRAPH === \n");
 	/* example graph taken from https://www.youtube.com/watch?v=pVfj6mxhdMw */
 	printf("   6\n"
@@ -194,16 +185,13 @@ void test_graph(void) {
 	graph_add_edge(graph, &alphabet['E'], &alphabet['C'], 5);
 	graph_add_edge(graph, &alphabet['B'], &alphabet['C'], 5);
 	
-	/* source of segmentation fault (that happens sometimes...) */
-	print_shortest_path('B', 'A');
-	/* ORIGINAL TEST:
 	for (i = 'A'; i <= 'E'; i++) {
 		for (j = 'A'; j <= 'E'; j++) {
 			print_shortest_path(i, j);
 		}
 		printf("\n");
 	}
-	*/
+	
 	
 	/* Testing Breadth First Search */
 	dealloc_deque(deque);

@@ -43,9 +43,22 @@ hashmap_entry *hashmap_iterator_next(hashmap_ds_iterator *const itr) {
 	return entry;
 }
 
+static int absval(int num) {
+	return num < 0 ? -num : num;
+}
+
 static int reference_hash(const void *E) {
-	unsigned long value = (unsigned long)E;
-	return (int)(value ^ (value >> 32));
+	/* Thomas Wang's 64 bit to 32 bit hash function */
+	size_t value = (size_t)E;
+	value = (~value) + (value << 18);
+	value = value ^ (value >> 31);
+	value = value * 21;
+	value = value ^ (value >> 11);
+	value = value + (value << 6);
+	value = value ^ (value >> 22);
+	return (int)value;
+	
+	/*return (int)(value ^ (value >> 32));*/
 }
 
 static int reference_equality(const void *E_1, const void *E_2) {
@@ -87,17 +100,14 @@ void dealloc_hashmap(hashmap_ds *const this) {
 }
 
 void *hashmap_put(hashmap_ds *const this, void *key, void *value) {
-	int i = this->hash(key);
-	if (i < 0) i *= -1;
-	i %= this->capacity;
+	size_t i = ((size_t)absval(this->hash(key))) % this->capacity;
 	
-	for(; this->table[i] != NULL && this->table[i] != TOMBSTONE; i++) {
+	for(; this->table[i] != NULL && this->table[i] != TOMBSTONE; i = (i+1) % this->capacity) {
 		if (this->is_equals(this->table[i]->key, key)) {
 			void *oldval = this->table[i]->value;
 			this->table[i]->value = value;
 			return oldval;
 		}
-		if (i == this->capacity - 1) {i = -1;}
 	}
 	
 	this->table[i] = malloc(sizeof *this->table[i]);
@@ -110,41 +120,33 @@ void *hashmap_put(hashmap_ds *const this, void *key, void *value) {
 }
 
 void *hashmap_get(hashmap_ds *const this, void *key) {
-	int i = this->hash(key);
-	if (i < 0) i *= -1;
-	i %= this->capacity;
+	size_t i = ((size_t)absval(this->hash(key))) % this->capacity;
 	
-	for (; this->table[i] != NULL; i++) {
+	for (; this->table[i] != NULL; i = (i+1) % this->capacity) {
 		if (this->table[i] == TOMBSTONE) continue;
 		if (this->is_equals(this->table[i]->key, key)) {
 			return this->table[i]->value;
 		}
-		if (i == this->capacity - 1) {i = -1;}
 	}
 	return NULL;
 }
 
 void *hashmap_get_keyref(hashmap_ds *const this, void *key) {
-	int i = this->hash(key);
-	if (i < 0) i *= -1;
-	i %= this->capacity;
+	size_t i = ((size_t)absval(this->hash(key))) % this->capacity;
 	
-	for (; this->table[i] != NULL; i++) {
+	for (; this->table[i] != NULL; i = (i+1) % this->capacity) {
 		if (this->table[i] == TOMBSTONE) continue;
 		if (this->is_equals(this->table[i]->key, key)) {
 			return this->table[i]->key;
 		}
-		if (i == this->capacity - 1) {i = -1;}
 	}
 	return NULL;
 }
 
 void *hashmap_remove(hashmap_ds *const this, void *key) {
-	int i = this->hash(key);
-	if (i < 0) i *= -1;
-	i %= this->capacity;
+	size_t i = ((size_t)absval(this->hash(key))) % this->capacity;
 	
-	for (; this->table[i] != NULL; i++) {
+	for (; this->table[i] != NULL; i = (i+1) % this->capacity) {
 		if (this->table[i] == TOMBSTONE) continue;
 		if (this->is_equals(this->table[i]->key, key)) {
 			void *oldval = this->table[i]->value;
@@ -153,7 +155,6 @@ void *hashmap_remove(hashmap_ds *const this, void *key) {
 			this->size--;
 			return oldval;
 		}
-		if (i == this->capacity - 1) {i = -1;}
 	}
 	return NULL;
 }

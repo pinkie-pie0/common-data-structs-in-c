@@ -42,12 +42,12 @@ void dealloc_pqueue(pqueue_ds *const this) {
 	free(this);
 }
 
-static void reheapify_up(pqueue_ds *const this, int initial) {
+static void reheapify_up(pqueue_ds *const this, size_t initial) {
 	void *temp;
-	int parent = (initial - 1) / 4;
-	while (parent >= 0 && this->compare(this->heap[initial], this->heap[parent]) < 0) {
-		*(int*)hashmap_get(this->indexmap, this->heap[initial]) = parent;
-		*(int*)hashmap_get(this->indexmap, this->heap[parent]) = initial;
+	size_t parent = (initial - 1) / 4;
+	while (initial != 0 && this->compare(this->heap[initial], this->heap[parent]) < 0) {
+		*(size_t*)hashmap_get(this->indexmap, this->heap[initial]) = parent;
+		*(size_t*)hashmap_get(this->indexmap, this->heap[parent]) = initial;
 		
 		temp = this->heap[parent];
 		this->heap[parent] = this->heap[initial];
@@ -58,23 +58,21 @@ static void reheapify_up(pqueue_ds *const this, int initial) {
 	}
 }
 
-static void reheapify_down(pqueue_ds *const this, int initial) {
+static void reheapify_down(pqueue_ds *const this, size_t initial) {
 	void *temp;
-	size_t size = this->size;
-	while(1) {
-		int i, child, smallest = initial;
-		
+	size_t i, child, smallest = initial;
+	while(initial < this->size) {
 		/* go through all children of the parent (initial) to determine if there's a smallest child */
 		for (i = 1; i <= 4; i++) {
 			child = (4 * initial) + i;
-			if (child < size && this->compare(this->heap[child], this->heap[smallest]) < 0) {
+			if (child < this->size && this->compare(this->heap[child], this->heap[smallest]) < 0) {
 				smallest = child;
 			}
 		}
 
 		if (smallest != initial) {
-			*(int*)hashmap_get(this->indexmap, this->heap[initial]) = smallest;
-			*(int*)hashmap_get(this->indexmap, this->heap[smallest]) = initial;
+			*(size_t*)hashmap_get(this->indexmap, this->heap[initial]) = smallest;
+			*(size_t*)hashmap_get(this->indexmap, this->heap[smallest]) = initial;
 			
 			temp = this->heap[initial];
 			this->heap[initial] = this->heap[smallest];
@@ -87,13 +85,13 @@ static void reheapify_down(pqueue_ds *const this, int initial) {
 }
 
 int pqueue_enqueue(pqueue_ds *const this, void *element) {
-	int *newindex;
+	size_t *newindex;
 	
 	/* element already exists in priority queue */
 	if (hashmap_get(this->indexmap, element) != NULL) return 0;
 	
 	if (this->size >= this->capacity) {
-		size_t new_capacity = this->capacity * 2;
+		size_t new_capacity = this->capacity << 1;
 		this->heap = realloc(this->heap, new_capacity * sizeof *this->heap);
 		DS_ASSERT(this->heap != NULL, "failed to expand the heap");
 
@@ -108,6 +106,7 @@ int pqueue_enqueue(pqueue_ds *const this, void *element) {
 	reheapify_up(this, *newindex);
 	return 1;
 }
+
 
 void *pqueue_dequeue(pqueue_ds *const this) {
 	void *oldval = NULL;
@@ -124,7 +123,7 @@ void *pqueue_dequeue(pqueue_ds *const this) {
 		}
 		
 		this->heap[0] = this->heap[--this->size];
-		*(int*)hashmap_get(this->indexmap, this->heap[0]) = 0;
+		*(size_t*)hashmap_get(this->indexmap, this->heap[0]) = 0;
 		this->heap[this->size] = NULL;
 		reheapify_down(this, 0);
 	}
@@ -132,8 +131,8 @@ void *pqueue_dequeue(pqueue_ds *const this) {
 }
 
 void pqueue_update(pqueue_ds *const this, void *element) {
-	int index = *(int*)hashmap_get(this->indexmap, element);
-	int parent = (index - 1) / 4;
+	size_t index = *(size_t*)hashmap_get(this->indexmap, element);
+	size_t parent = (index - 1) / 4;
 	if (index > 0 && this->compare(this->heap[index], this->heap[parent]) < 0) {
 		reheapify_up(this, index);
 	} else {
@@ -143,7 +142,7 @@ void pqueue_update(pqueue_ds *const this, void *element) {
 
 void *pqueue_remove(pqueue_ds *const this, void *element) {
 	/* remove element-index mapping from the hashmap first */
-	int last, index = *(int*)hashmap_get(this->indexmap, element);
+	size_t last, index = *(size_t*)hashmap_get(this->indexmap, element);
 	free(hashmap_get(this->indexmap, element));
 	hashmap_remove(this->indexmap, element);
 	
@@ -154,7 +153,7 @@ void *pqueue_remove(pqueue_ds *const this, void *element) {
 	if (index != last) {
 		this->heap[index] = this->heap[last];
 		this->heap[this->size] = NULL;
-		*(int*)hashmap_get(this->indexmap, this->heap[index]) = index;
+		*(size_t*)hashmap_get(this->indexmap, this->heap[index]) = index;
 	
 		/* call pqueue_update */
 		pqueue_update(this, this->heap[index]);
