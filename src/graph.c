@@ -160,12 +160,9 @@ int graph_remove_edge(graph_ds *const this, void *a, void *b) {
 	vertex *a_v = corresponding_vertex(this, a);
 	vertex *b_v = corresponding_vertex(this, b);
 	if (a_v != NULL && b_v != NULL && hashmap_get(hashmap_get(this->adj_list, a_v), b_v) != NULL) {
-		/* free the dynamically allocated weights in both connections */
-		free(hashmap_get(hashmap_get(this->adj_list, a_v), b_v));
-		free(hashmap_get(hashmap_get(this->adj_list, b_v), a_v));
-		/* disconnect the vertex in both inner hashmaps */
-		hashmap_remove(hashmap_get(this->adj_list, a_v), b_v);
-		hashmap_remove(hashmap_get(this->adj_list, b_v), a_v);
+		/* disconnect the vertex in both inner hashmaps whilist freeing dynamically allocated weights */
+		free(hashmap_remove(hashmap_get(this->adj_list, a_v), b_v));
+		free(hashmap_remove(hashmap_get(this->adj_list, b_v), a_v));
 		
 		a_v->degree -= 1;
 		b_v->degree -= 1;
@@ -185,8 +182,7 @@ int graph_remove_vertex(graph_ds *const this, void *label) {
 			graph_remove_edge(this, label, ((vertex*)entries[i]->key)->label);
 		}
 		free(entries);
-		dealloc_hashmap(hashmap_get(this->adj_list, removal));
-		hashmap_remove(this->adj_list, removal);
+		dealloc_hashmap(hashmap_remove(this->adj_list, removal));
 		free(removal);
 		return 1;
 	}
@@ -262,64 +258,6 @@ deque_ds *graph_depth_first_search(graph_ds *const this, void *origin) {
 	}
 	return retval;
 }
-
-/* broken algorithm, needs a whole rewrite
-
-static int largest_degree_comparator(const void *v_1, const void *v_2) {
-	size_t degree_1 = ((vertex*)v_1)->degree;
-	size_t degree_2 = ((vertex*)v_2)->degree;
-	return (degree_1 < degree_2) - (degree_1 > degree_2);
-}
-
-int graph_minimum_colors(graph_ds *const this, void *origin) {
-	hashmap_ds_iterator edge_itr, sub_edge_itr;
-	int flag, minimum_colors = 0;
-	
-	deque_ds *backed = graph_breadth_first_search_internal(this, origin, 0);
-	pqueue_ds *cluster = alloc_pqueue(largest_degree_comparator);
-	
-	vertex *process, *subprocess;
-	
-	while (!deque_isempty(backed)) {
-		pqueue_enqueue(cluster, deque_dequeue(backed));
-	}
-	
-	graph_reset_vertices(this, ZERO);
-	while (pqueue_peek(cluster) != NULL) {
-		process = pqueue_dequeue(cluster);
-		process->visited = 1;
-		flag = 0;
-		minimum_colors++;
-		
-		do {
-			edge_itr = hashmap_getiterator(hashmap_get(this->adj_list, process));
-	
-			while(hashmap_iterator_hasnext(&edge_itr)) {
-				sub_edge_itr = hashmap_getiterator(hashmap_get(this->adj_list, hashmap_iterator_next(&edge_itr)->key));
-				
-				while(hashmap_iterator_hasnext(&sub_edge_itr)) {
-					flag = 1;
-					subprocess = hashmap_iterator_next(&sub_edge_itr)->key;
-					printf("\treceived subneighbor %c\n", *(char*)subprocess->label);
-					if (subprocess->visited) {
-						flag = 0;
-						break;
-					}
-				}
-			}
-			
-			if (flag) {
-				subprocess->visited = 1;
-				pqueue_remove(cluster, subprocess);
-				process = subprocess;
-			}
-			
-		} while (flag);
-	}
-	
-	return minimum_colors;
-}
-*/
 
 /** implementation of dijkstra's algorithm - BEGIN **/
 double graph_cheapest_path(graph_ds *const this, void *origin, void *end, deque_ds *stack) {

@@ -112,9 +112,7 @@ void *pqueue_dequeue(pqueue_ds *const this) {
 	void *oldval = NULL;
 	if (this->size != 0) {
 		oldval = this->heap[0];
-		
-		free(hashmap_get(this->indexmap, oldval));
-		hashmap_remove(this->indexmap, oldval);
+		free(hashmap_remove(this->indexmap, oldval));
 		
 		if (this->size == 1) {
 			this->heap[0] = NULL;
@@ -143,8 +141,7 @@ void pqueue_update(pqueue_ds *const this, void *element) {
 void *pqueue_remove(pqueue_ds *const this, void *element) {
 	/* remove element-index mapping from the hashmap first */
 	size_t last, index = *(size_t*)hashmap_get(this->indexmap, element);
-	free(hashmap_get(this->indexmap, element));
-	hashmap_remove(this->indexmap, element);
+	free(hashmap_remove(this->indexmap, element));
 	
 	/* swap with the last item in the heap, and update its element-index mapping */
 	last = --this->size;
