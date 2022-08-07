@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-/*#define TOMBSTONE ((void*)1)*/
 
 #define DS_NAME "hashmap"
 #include "err/ds_assert.h"
@@ -11,12 +10,14 @@ typedef struct hashmap_entry hashmap_entry;
 typedef struct hashmap_ds {
 	int (*hash)(const void*);
 	int (*is_equals)(const void*, const void*);
-	size_t size, capacity;
+	size_t size, capacity, load_factor;
 	struct hashmap_entry {
 		void *key, *value;
 		size_t psl;
 	} **table;
 } hashmap_ds;
+
+void *hashmap_put(hashmap_ds *, void *key, void *value);
 
 typedef struct hashmap_ds_iterator {
 	size_t index;
@@ -68,6 +69,38 @@ static int reference_equality(const void *E_1, const void *E_2) {
 	return E_1 == E_2;
 }
 
+static void hashmap_rehash(hashmap_ds *const this) {
+	size_t i;
+	
+	/* initialize all values of the temporary hashmap */
+	hashmap_ds temp;
+	temp.hash = this->hash;
+	temp.is_equals = this->is_equals;
+	temp.size = 0;
+	temp.capacity = this->capacity << 1;
+	temp.load_factor = (temp.capacity * 3) >> 2;
+	temp.table = malloc(temp.capacity * sizeof *temp.table);
+	DS_ASSERT(temp.table != NULL, "failed to allocate memory for rehashed table");
+	
+	for (i = 0; i < temp.capacity; i++) {
+		temp.table[i] = NULL;
+	}
+	
+	/* put all pairs from the hashmap's old table */
+	for (i = 0; i < this->capacity; i++) {
+		if (this->table[i] != NULL) {
+			hashmap_put(&temp, this->table[i]->key, this->table[i]->value);
+			free(this->table[i]);
+		}
+	}
+	
+	/* only things we need to change are capacity, load factor, and the new table */
+	this->capacity = temp.capacity;
+	this->load_factor = temp.load_factor;
+	free(this->table);
+	this->table = temp.table;
+}
+
 hashmap_ds *alloc_hashmap(int hash(const void*), int is_equals(const void*, const void*)) {
 	size_t i;
 	
@@ -79,6 +112,7 @@ hashmap_ds *alloc_hashmap(int hash(const void*), int is_equals(const void*, cons
 	
 	this->size = 0;
 	this->capacity = INITIAL_CAPACITY;
+	this->load_factor = (INITIAL_CAPACITY * 3) >> 2;
 	this->table = malloc(INITIAL_CAPACITY * sizeof *this->table);
 	DS_ASSERT(this->table != NULL, "failed to allocate memory for the " DS_NAME "'s table");
 	
@@ -103,11 +137,15 @@ void dealloc_hashmap(hashmap_ds *const this) {
 }
 
 void *hashmap_put(hashmap_ds *const this, void *key, void *value) {
-	size_t i = ((size_t)absval(this->hash(key))) % this->capacity;
+	size_t i;
+	hashmap_entry *insertion;
 	
-	hashmap_entry *insertion = malloc(sizeof *insertion);
+	
+	if (this->size >= this->load_factor) hashmap_rehash(this);
+	i = ((size_t)absval(this->hash(key))) % this->capacity;
+	
+	insertion = malloc(sizeof *insertion);
 	DS_ASSERT(insertion != NULL, "failed to allocate memory for a new table entry");
-	
 	insertion->key = key;
 	insertion->value = value;
 	for (insertion->psl = 0; this->table[i] != NULL; i = (i+1) % this->capacity, insertion->psl++) {
