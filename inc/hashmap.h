@@ -3,6 +3,7 @@
 
 typedef struct hashmap_entry {
 	void *key, *value;
+	size_t psl;
 } hashmap_entry;
 
 typedef struct hashmap_ds hashmap_ds;

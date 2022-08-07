@@ -1,9 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
-#define TOMBSTONE ((void*)1)
+/*#define TOMBSTONE ((void*)1)*/
 
 #define DS_NAME "hashmap"
 #include "err/ds_assert.h"
+
+#define INITIAL_CAPACITY 16
 
 typedef struct hashmap_entry hashmap_entry;
 typedef struct hashmap_ds {
@@ -12,6 +14,7 @@ typedef struct hashmap_ds {
 	size_t size, capacity;
 	struct hashmap_entry {
 		void *key, *value;
+		size_t psl;
 	} **table;
 } hashmap_ds;
 
@@ -36,7 +39,7 @@ int hashmap_iterator_hasnext(hashmap_ds_iterator *const itr) {
 hashmap_entry *hashmap_iterator_next(hashmap_ds_iterator *const itr) {
 	hashmap_entry *entry = NULL;
 	if (!hashmap_iterator_hasnext(itr)) return NULL;
-	while (entry == NULL || entry == TOMBSTONE) {
+	while (entry == NULL) {
 		entry = *itr->entries++;
 	}
 	itr->index++;
@@ -75,11 +78,11 @@ hashmap_ds *alloc_hashmap(int hash(const void*), int is_equals(const void*, cons
 	this->is_equals = is_equals;
 	
 	this->size = 0;
-	this->capacity = 64;
-	this->table = malloc(64 * sizeof *this->table);
+	this->capacity = INITIAL_CAPACITY;
+	this->table = malloc(INITIAL_CAPACITY * sizeof *this->table);
 	DS_ASSERT(this->table != NULL, "failed to allocate memory for the " DS_NAME "'s table");
 	
-	for (i = 0; i < 64; i++) {
+	for (i = 0; i < INITIAL_CAPACITY; i++) {
 		this->table[i] = NULL;
 	}
 	
@@ -93,7 +96,7 @@ hashmap_ds *alloc_identityhashmap() {
 void dealloc_hashmap(hashmap_ds *const this) {
 	size_t i, capacity;
 	for (i = 0, capacity = this->capacity; i < capacity; i++) {
-		if (this->table[i] != NULL && this->table[i] != TOMBSTONE) free(this->table[i]);
+		if (this->table[i] != NULL) free(this->table[i]);
 	}
 	free(this->table);
 	free(this);
@@ -102,19 +105,28 @@ void dealloc_hashmap(hashmap_ds *const this) {
 void *hashmap_put(hashmap_ds *const this, void *key, void *value) {
 	size_t i = ((size_t)absval(this->hash(key))) % this->capacity;
 	
-	for(; this->table[i] != NULL && this->table[i] != TOMBSTONE; i = (i+1) % this->capacity) {
+	hashmap_entry *insertion = malloc(sizeof *insertion);
+	DS_ASSERT(insertion != NULL, "failed to allocate memory for a new table entry");
+	
+	insertion->key = key;
+	insertion->value = value;
+	for (insertion->psl = 0; this->table[i] != NULL; i = (i+1) % this->capacity, insertion->psl++) {
 		if (this->is_equals(this->table[i]->key, key)) {
 			void *oldval = this->table[i]->value;
 			this->table[i]->value = value;
+			free(insertion);
 			return oldval;
+		} else if (insertion->psl > this->table[i]->psl) {
+			/* swap */
+			hashmap_entry *temp = this->table[i];
+			this->table[i] = insertion;
+			
+			/* find new spot */
+			insertion = temp;
 		}
 	}
 	
-	this->table[i] = malloc(sizeof *this->table[i]);
-	DS_ASSERT(this->table[i] != NULL, "failed to allocate memory for a new table entry");
-	
-	this->table[i]->key = key;
-	this->table[i]->value = value;
+	this->table[i] = insertion;
 	this->size++;
 	return NULL;
 }
@@ -123,7 +135,6 @@ void *hashmap_get(hashmap_ds *const this, void *key) {
 	size_t i = ((size_t)absval(this->hash(key))) % this->capacity;
 	
 	for (; this->table[i] != NULL; i = (i+1) % this->capacity) {
-		if (this->table[i] == TOMBSTONE) continue;
 		if (this->is_equals(this->table[i]->key, key)) {
 			return this->table[i]->value;
 		}
@@ -135,7 +146,6 @@ void *hashmap_get_keyref(hashmap_ds *const this, void *key) {
 	size_t i = ((size_t)absval(this->hash(key))) % this->capacity;
 	
 	for (; this->table[i] != NULL; i = (i+1) % this->capacity) {
-		if (this->table[i] == TOMBSTONE) continue;
 		if (this->is_equals(this->table[i]->key, key)) {
 			return this->table[i]->key;
 		}
@@ -147,15 +157,23 @@ void *hashmap_remove(hashmap_ds *const this, void *key) {
 	size_t i = ((size_t)absval(this->hash(key))) % this->capacity;
 	
 	for (; this->table[i] != NULL; i = (i+1) % this->capacity) {
-		if (this->table[i] == TOMBSTONE) continue;
 		if (this->is_equals(this->table[i]->key, key)) {
 			void *oldval = this->table[i]->value;
 			free(this->table[i]);
-			this->table[i] = TOMBSTONE;
+			this->table[i] = NULL;
+			
+			/* engage backward shifting */
+			for (i = (i+1) % this->capacity; this->table[i] != NULL && this->table[i]->psl > 0; i = (i+1) % this->capacity) {
+				this->table[i]->psl--;
+				(i-1 >= this->capacity) ? (this->table[this->capacity-1] = this->table[i]) : (this->table[i-1] = this->table[i]);
+				this->table[i] = NULL;
+			}
+			
 			this->size--;
 			return oldval;
 		}
 	}
+	
 	return NULL;
 }
 
@@ -169,7 +187,7 @@ hashmap_entry **hashmap_getentries(hashmap_ds *const this) {
 	entries[this->size] = NULL;
 	iteration = entries;
 	for (i = 0, capacity = this->capacity; i < capacity; i++) {
-		if (this->table[i] != NULL && this->table[i] != TOMBSTONE) *iteration++ = this->table[i];
+		if (this->table[i] != NULL) *iteration++ = this->table[i];
 	}
 	return entries;
 }
