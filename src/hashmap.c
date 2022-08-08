@@ -61,8 +61,6 @@ static int reference_hash(const void *E) {
 	value = value + (value << 6);
 	value = value ^ (value >> 22);
 	return (int)value;
-	
-	/*return (int)(value ^ (value >> 32));*/
 }
 
 static int reference_equality(const void *E_1, const void *E_2) {
@@ -136,6 +134,17 @@ void dealloc_hashmap(hashmap_ds *const this) {
 	free(this);
 }
 
+static hashmap_entry **hashmap_search(hashmap_ds *const this, void *key) {
+	size_t mask = this->capacity - 1;
+	size_t i = ((size_t)absval(this->hash(key))) & mask;
+	for (; this->table[i] != NULL; i = (i+1) & mask) {
+		if (this->is_equals(this->table[i]->key, key)) {
+			break;
+		}
+	}
+	return &this->table[i];
+}
+
 void *hashmap_put(hashmap_ds *const this, void *key, void *value) {
 	size_t i;
 	hashmap_entry *insertion;
@@ -170,49 +179,45 @@ void *hashmap_put(hashmap_ds *const this, void *key, void *value) {
 }
 
 void *hashmap_get(hashmap_ds *const this, void *key) {
-	size_t i = ((size_t)absval(this->hash(key))) % this->capacity;
-	
-	for (; this->table[i] != NULL; i = (i+1) % this->capacity) {
-		if (this->is_equals(this->table[i]->key, key)) {
-			return this->table[i]->value;
-		}
-	}
-	return NULL;
+	hashmap_entry **entryref = hashmap_search(this, key);
+	return *entryref != NULL ? (*entryref)->value : NULL;
 }
 
 void *hashmap_get_keyref(hashmap_ds *const this, void *key) {
-	size_t i = ((size_t)absval(this->hash(key))) % this->capacity;
-	
-	for (; this->table[i] != NULL; i = (i+1) % this->capacity) {
-		if (this->is_equals(this->table[i]->key, key)) {
-			return this->table[i]->key;
-		}
-	}
-	return NULL;
+	hashmap_entry **entryref = hashmap_search(this, key);
+	return *entryref != NULL ? (*entryref)->key : NULL;
 }
 
 void *hashmap_remove(hashmap_ds *const this, void *key) {
-	size_t i = ((size_t)absval(this->hash(key))) % this->capacity;
+	void *oldval = NULL;
+	hashmap_entry **entryref = hashmap_search(this, key);
 	
-	for (; this->table[i] != NULL; i = (i+1) % this->capacity) {
-		if (this->is_equals(this->table[i]->key, key)) {
-			void *oldval = this->table[i]->value;
-			free(this->table[i]);
-			this->table[i] = NULL;
+	if (*entryref != NULL) {
+		size_t i, mask = this->capacity - 1;
+		
+		oldval = (*entryref)->value;
+		free(*entryref);
+		*entryref = NULL;
+		
+		/* engage backward shifting */
+		i = (((size_t)(entryref - this->table)) + 1) & mask;
+		for (; this->table[i] != NULL && this->table[i]->psl > 0; i = (i+1) & mask) {
+			this->table[i]->psl--;
 			
-			/* engage backward shifting */
-			for (i = (i+1) % this->capacity; this->table[i] != NULL && this->table[i]->psl > 0; i = (i+1) % this->capacity) {
-				this->table[i]->psl--;
-				(i-1 >= this->capacity) ? (this->table[this->capacity-1] = this->table[i]) : (this->table[i-1] = this->table[i]);
-				this->table[i] = NULL;
+			/* account for unsigned wraparound */
+			if (i-1 >= this->capacity) {
+				this->table[this->capacity-1] = this->table[i];
+			} else {
+				this->table[i-1] = this->table[i];
 			}
 			
-			this->size--;
-			return oldval;
+			this->table[i] = NULL;
 		}
+		
+		this->size--;
 	}
 	
-	return NULL;
+	return oldval;
 }
 
 hashmap_entry **hashmap_getentries(hashmap_ds *const this) {
