@@ -204,13 +204,8 @@ void *hashmap_remove(hashmap_ds *const this, void *key) {
 		for (; this->table[i] != NULL && this->table[i]->psl > 0; i = (i+1) & mask) {
 			this->table[i]->psl--;
 			
-			/* account for unsigned wraparound */
-			if (i-1 >= this->capacity) {
-				this->table[this->capacity-1] = this->table[i];
-			} else {
-				this->table[i-1] = this->table[i];
-			}
-			
+			/* account for unsigned wraparound if any */
+			this->table[(i-1) & mask] = this->table[i];
 			this->table[i] = NULL;
 		}
 		
