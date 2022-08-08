@@ -146,18 +146,14 @@ static hashmap_entry **hashmap_search(hashmap_ds *const this, void *key) {
 }
 
 void *hashmap_put(hashmap_ds *const this, void *key, void *value) {
-	size_t i;
-	hashmap_entry *insertion;
-	
-	
-	if (this->size >= this->load_factor) hashmap_rehash(this);
-	i = ((size_t)absval(this->hash(key))) % this->capacity;
-	
-	insertion = malloc(sizeof *insertion);
+	size_t mask = this->capacity - 1;
+	size_t i = ((size_t)absval(this->hash(key))) % this->capacity;
+	hashmap_entry *insertion = malloc(sizeof *insertion);
 	DS_ASSERT(insertion != NULL, "failed to allocate memory for a new table entry");
+	
 	insertion->key = key;
 	insertion->value = value;
-	for (insertion->psl = 0; this->table[i] != NULL; i = (i+1) % this->capacity, insertion->psl++) {
+	for (insertion->psl = 0; this->table[i] != NULL; i = (i+1) & mask, insertion->psl++) {
 		if (this->is_equals(this->table[i]->key, key)) {
 			void *oldval = this->table[i]->value;
 			this->table[i]->value = value;
@@ -174,7 +170,7 @@ void *hashmap_put(hashmap_ds *const this, void *key, void *value) {
 	}
 	
 	this->table[i] = insertion;
-	this->size++;
+	if (++this->size >= this->load_factor) hashmap_rehash(this);
 	return NULL;
 }
 
