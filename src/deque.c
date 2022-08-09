@@ -3,11 +3,15 @@
 
 #define DS_NAME "deque"
 #include "err/ds_assert.h"
+#include "deque.h"
 
-typedef struct deque_ds {
-	size_t head, tail, len, capacity;
+struct deque_ds {
+	size_t head;
+	size_t tail;
+	size_t len;
+	size_t capacity;
 	void **deque;
-} deque_ds;
+};
 
 deque_ds *alloc_deque(void) {
 	deque_ds *this = malloc(sizeof *this);

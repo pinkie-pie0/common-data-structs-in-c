@@ -4,13 +4,15 @@
 
 #define DS_NAME "pqueue"
 #include "err/ds_assert.h"
+#include "pqueue.h"
 
-typedef struct pqueue_ds {
+struct pqueue_ds {
 	int (*compare)(const void*, const void*);
-	size_t size, capacity;
+	size_t size;
+	size_t capacity;
 	hashmap_ds *indexmap;
 	void **heap;
-} pqueue_ds;
+};
 
 pqueue_ds *alloc_pqueue(int comparator(const void*,const void*)) {
 	pqueue_ds *this = malloc(sizeof *this);

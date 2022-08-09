@@ -3,52 +3,59 @@
 
 #define DS_NAME "hashmap"
 #include "err/ds_assert.h"
+#include "hashmap.h"
 
 #define INITIAL_CAPACITY 16
 
-typedef struct hashmap_entry hashmap_entry;
-typedef struct hashmap_ds {
-	int (*hash)(const void*);
-	int (*is_equals)(const void*, const void*);
-	size_t size, capacity, load_factor;
-	struct hashmap_entry {
-		void *key, *value;
-		size_t psl;
-	} **table;
-} hashmap_ds;
-
-void *hashmap_put(hashmap_ds *, void *key, void *value);
-
-typedef struct hashmap_ds_iterator {
-	size_t index;
-	hashmap_ds *map;
-	hashmap_entry **entries;
-} hashmap_ds_iterator;
-
-hashmap_ds_iterator hashmap_getiterator(hashmap_ds *const this) {
-	hashmap_ds_iterator itr;
-	itr.index = 0;
-	itr.map = this;
-	itr.entries = this->table;
-	return itr;
-}
-
-int hashmap_iterator_hasnext(hashmap_ds_iterator *const itr) {
-	return itr->index < itr->map->size;
-}
-
-hashmap_entry *hashmap_iterator_next(hashmap_ds_iterator *const itr) {
-	hashmap_entry *entry = NULL;
-	if (!hashmap_iterator_hasnext(itr)) return NULL;
-	while (entry == NULL) {
-		entry = *itr->entries++;
-	}
-	itr->index++;
-	return entry;
-}
+static int reference_hash(const void*);
+static int reference_equality(const void*, const void*);
 
 static int absval(int num) {
 	return num < 0 ? -num : num;
+}
+
+struct hashmap_ds {
+	int (*hash)(const void*);
+	int (*is_equals)(const void*, const void*);
+	size_t size;
+	size_t capacity;
+	size_t load_factor;
+	hashmap_entry **table;
+};
+
+hashmap_ds *alloc_hashmap(int hash(const void*), int is_equals(const void*, const void*)) {
+	size_t i;
+	
+	hashmap_ds *this = malloc(sizeof *this);
+	DS_ASSERT(this != NULL, "failed to allocate memory for new " DS_NAME);
+	
+	this->hash = hash;
+	this->is_equals = is_equals;
+	
+	this->size = 0;
+	this->capacity = INITIAL_CAPACITY;
+	this->load_factor = (INITIAL_CAPACITY * 3) >> 2;
+	this->table = malloc(INITIAL_CAPACITY * sizeof *this->table);
+	DS_ASSERT(this->table != NULL, "failed to allocate memory for the " DS_NAME "'s table");
+	
+	for (i = 0; i < INITIAL_CAPACITY; i++) {
+		this->table[i] = NULL;
+	}
+	
+	return this;
+}
+
+hashmap_ds *alloc_identityhashmap() {
+	return alloc_hashmap(reference_hash, reference_equality);
+}
+
+void dealloc_hashmap(hashmap_ds *const this) {
+	size_t i, capacity;
+	for (i = 0, capacity = this->capacity; i < capacity; i++) {
+		if (this->table[i] != NULL) free(this->table[i]);
+	}
+	free(this->table);
+	free(this);
 }
 
 static int reference_hash(const void *E) {
@@ -97,41 +104,6 @@ static void hashmap_rehash(hashmap_ds *const this) {
 	this->load_factor = temp.load_factor;
 	free(this->table);
 	this->table = temp.table;
-}
-
-hashmap_ds *alloc_hashmap(int hash(const void*), int is_equals(const void*, const void*)) {
-	size_t i;
-	
-	hashmap_ds *this = malloc(sizeof *this);
-	DS_ASSERT(this != NULL, "failed to allocate memory for new " DS_NAME);
-	
-	this->hash = hash;
-	this->is_equals = is_equals;
-	
-	this->size = 0;
-	this->capacity = INITIAL_CAPACITY;
-	this->load_factor = (INITIAL_CAPACITY * 3) >> 2;
-	this->table = malloc(INITIAL_CAPACITY * sizeof *this->table);
-	DS_ASSERT(this->table != NULL, "failed to allocate memory for the " DS_NAME "'s table");
-	
-	for (i = 0; i < INITIAL_CAPACITY; i++) {
-		this->table[i] = NULL;
-	}
-	
-	return this;
-}
-
-hashmap_ds *alloc_identityhashmap() {
-	return alloc_hashmap(reference_hash, reference_equality);
-}
-
-void dealloc_hashmap(hashmap_ds *const this) {
-	size_t i, capacity;
-	for (i = 0, capacity = this->capacity; i < capacity; i++) {
-		if (this->table[i] != NULL) free(this->table[i]);
-	}
-	free(this->table);
-	free(this);
 }
 
 static hashmap_entry **hashmap_search(hashmap_ds *const this, void *key) {
@@ -224,4 +196,26 @@ hashmap_entry **hashmap_getentries(hashmap_ds *const this) {
 		if (this->table[i] != NULL) *iteration++ = this->table[i];
 	}
 	return entries;
+}
+
+hashmap_ds_iterator hashmap_getiterator(hashmap_ds *const this) {
+	hashmap_ds_iterator itr;
+	itr.index = 0;
+	itr.map = this;
+	itr.entries = this->table;
+	return itr;
+}
+
+int hashmap_iterator_hasnext(hashmap_ds_iterator *const itr) {
+	return itr->index < itr->map->size;
+}
+
+hashmap_entry *hashmap_iterator_next(hashmap_ds_iterator *const itr) {
+	hashmap_entry *entry = NULL;
+	if (!hashmap_iterator_hasnext(itr)) return NULL;
+	while (entry == NULL) {
+		entry = *itr->entries++;
+	}
+	itr->index++;
+	return entry;
 }

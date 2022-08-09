@@ -6,14 +6,15 @@
 
 #define DS_NAME "graph"
 #include "err/ds_assert.h"
+#include "graph.h"
 
 /* graph abstract data type */
-typedef struct graph_ds {
+struct graph_ds {
 	int (*label_hash)(const void*);
 	int (*label_equals)(const void*, const void*);
 	hashmap_ds *adj_list;
 	int num_edges;
-} graph_ds;
+};
 
 /* basic unit of the graph */
 typedef struct graph_vertex {

@@ -4,12 +4,15 @@
 
 #define DS_NAME "avltree"
 #include "err/ds_assert.h"
+#include "avltree.h"
 
 #define NODE_HEIGHT(node) (((node) == NULL) ? (-1) : (node->height))
 #define MAX(a, b) (((a) > (b)) ? (a) : (b))
 
 typedef struct avltree_node avltree_node;
-typedef struct avltree_ds {
+static void avltree_delete_subtree(avltree_node *root);
+
+struct avltree_ds {
 	int (*compare)(const void*, const void*);
 	struct avltree_node {
 		void *val;
@@ -17,12 +20,7 @@ typedef struct avltree_ds {
 		avltree_node *left;
 		avltree_node *right;
 	} *root;
-} avltree_ds;
-
-typedef struct avltree_ds_iterator {
-	avltree_ds *this;
-	deque_ds *stack;
-} avltree_ds_iterator;
+};
 
 static avltree_node *alloc_avltree_node(void *val) {
 	avltree_node *node = malloc(sizeof *node);
@@ -44,6 +42,11 @@ avltree_ds *alloc_avltree(int comparator(const void*, const void*)) {
 	return this;
 }
 
+void dealloc_avltree(avltree_ds *const this) {
+	avltree_delete_subtree(this->root);
+	free(this);
+}
+
 static void avltree_delete_subtree(avltree_node *root) {
 	if (root != NULL) {
 		avltree_delete_subtree(root->left);
@@ -51,60 +54,6 @@ static void avltree_delete_subtree(avltree_node *root) {
 		free(root);
 	}
 }
-
-void dealloc_avltree(avltree_ds *const this) {
-	avltree_delete_subtree(this->root);
-	free(this);
-}
-
-#undef DS_NAME
-#define DS_NAME "avltree iterator"
-
-avltree_ds_iterator *alloc_avltree_iterator(avltree_ds *const this) {
-	avltree_ds_iterator *itr = malloc(sizeof *itr);
-	DS_ASSERT(itr != NULL, "failed to allocate memory for new " DS_NAME);
-	
-	itr->this = this;
-	itr->stack = alloc_deque();
-	if (this->root != NULL) {
-		deque_push(itr->stack, this->root);
-		while (((avltree_node*)deque_stackpeek(itr->stack))->left != NULL) {
-			deque_push(itr->stack, ((avltree_node*)deque_stackpeek(itr->stack))->left);
-		}
-	}
-	return itr;
-}
-
-void dealloc_avltree_iterator(avltree_ds_iterator *const itr) {
-	dealloc_deque(itr->stack);
-	free(itr);
-}
-
-int avltree_iterator_hasnext(avltree_ds_iterator *const itr) {
-	return !deque_isempty(itr->stack);
-}
-
-void *avltree_iterator_next(avltree_ds_iterator *const itr) {
-	avltree_node *process;
-	void *val;
-	
-	DS_ASSERT(avltree_iterator_hasnext(itr), "no elements left to iterate");
-	
-	process = deque_pop(itr->stack);
-	val = process->val;
-	
-	if (process->right != NULL) {
-		deque_push(itr->stack, process->right);
-		while (((avltree_node*)deque_stackpeek(itr->stack))->left != NULL) {
-			deque_push(itr->stack, ((avltree_node*)deque_stackpeek(itr->stack))->left);
-		}
-	}
-	
-	return val;
-}
-
-#undef DS_NAME
-#define DS_NAME "avltree"
 
 static void avltree_rotate_right(avltree_node **const rootref) {
 	int left_height, right_height;
@@ -276,4 +225,55 @@ void *avltree_max(avltree_ds *const this) {
 		return traversal->val;
 	}
 	return NULL;
+}
+
+#undef DS_NAME
+#define DS_NAME "avltree iterator"
+
+struct avltree_ds_iterator {
+	avltree_ds *this;
+	deque_ds *stack;
+};
+
+avltree_ds_iterator *alloc_avltree_iterator(avltree_ds *const this) {
+	avltree_ds_iterator *itr = malloc(sizeof *itr);
+	DS_ASSERT(itr != NULL, "failed to allocate memory for new " DS_NAME);
+	
+	itr->this = this;
+	itr->stack = alloc_deque();
+	if (this->root != NULL) {
+		deque_push(itr->stack, this->root);
+		while (((avltree_node*)deque_stackpeek(itr->stack))->left != NULL) {
+			deque_push(itr->stack, ((avltree_node*)deque_stackpeek(itr->stack))->left);
+		}
+	}
+	return itr;
+}
+
+void dealloc_avltree_iterator(avltree_ds_iterator *const itr) {
+	dealloc_deque(itr->stack);
+	free(itr);
+}
+
+int avltree_iterator_hasnext(avltree_ds_iterator *const itr) {
+	return !deque_isempty(itr->stack);
+}
+
+void *avltree_iterator_next(avltree_ds_iterator *const itr) {
+	avltree_node *process;
+	void *val;
+	
+	DS_ASSERT(avltree_iterator_hasnext(itr), "no elements left to iterate");
+	
+	process = deque_pop(itr->stack);
+	val = process->val;
+	
+	if (process->right != NULL) {
+		deque_push(itr->stack, process->right);
+		while (((avltree_node*)deque_stackpeek(itr->stack))->left != NULL) {
+			deque_push(itr->stack, ((avltree_node*)deque_stackpeek(itr->stack))->left);
+		}
+	}
+	
+	return val;
 }
