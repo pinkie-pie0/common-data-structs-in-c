@@ -1,0 +1,33 @@
+\hypertarget{graph_8h_source}{}\doxysection{graph.\+h}
+\label{graph_8h_source}\index{inc/graph.h@{inc/graph.h}}
+\mbox{\hyperlink{graph_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#ifndef GRAPH\_H}}
+\DoxyCodeLine{2 \textcolor{preprocessor}{\#define GRAPH\_H}}
+\DoxyCodeLine{3 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{deque_8h}{deque.h}}"{}}}
+\DoxyCodeLine{4 }
+\DoxyCodeLine{11 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{graph_8h_a0e667b6d4bb02410756f70f18d92936e}{graph\_ds}} \mbox{\hyperlink{graph_8h_a0e667b6d4bb02410756f70f18d92936e}{graph\_ds}};}
+\DoxyCodeLine{12 }
+\DoxyCodeLine{18 \mbox{\hyperlink{graph_8h_a0e667b6d4bb02410756f70f18d92936e}{graph\_ds}} *\mbox{\hyperlink{graph_8h_a1c038f53b16beaf12f2ce8eb4a26ec5c}{alloc\_graph}}(\textcolor{keywordtype}{int} label\_hash(\textcolor{keyword}{const} \textcolor{keywordtype}{void}*), \textcolor{keywordtype}{int} label\_equals(\textcolor{keyword}{const} \textcolor{keywordtype}{void}*, \textcolor{keyword}{const} \textcolor{keywordtype}{void}*));}
+\DoxyCodeLine{19 }
+\DoxyCodeLine{25 \textcolor{keywordtype}{void} \mbox{\hyperlink{graph_8h_a8fdad385059056a0e378f5738f02ff52}{dealloc\_graph}}(\mbox{\hyperlink{graph_8h_a0e667b6d4bb02410756f70f18d92936e}{graph\_ds}} *\textcolor{keyword}{this});}
+\DoxyCodeLine{26 }
+\DoxyCodeLine{34 \textcolor{keywordtype}{int} \mbox{\hyperlink{graph_8h_a87f13c6da6a8702c78875b1e1299513c}{graph\_add\_vertex}}(\mbox{\hyperlink{graph_8h_a0e667b6d4bb02410756f70f18d92936e}{graph\_ds}} *\textcolor{keyword}{this}, \textcolor{keywordtype}{void} *label);}
+\DoxyCodeLine{35 }
+\DoxyCodeLine{46 \textcolor{keywordtype}{int} \mbox{\hyperlink{graph_8h_a49b6271cc58c9f97492409632688e639}{graph\_add\_edge}}(\mbox{\hyperlink{graph_8h_a0e667b6d4bb02410756f70f18d92936e}{graph\_ds}} *\textcolor{keyword}{this}, \textcolor{keywordtype}{void} *a, \textcolor{keywordtype}{void} *b, \textcolor{keywordtype}{double} weight);}
+\DoxyCodeLine{47 }
+\DoxyCodeLine{57 \textcolor{keywordtype}{int} \mbox{\hyperlink{graph_8h_aa259e1ef3faddf064e6e252237600ebc}{graph\_remove\_edge}}(\mbox{\hyperlink{graph_8h_a0e667b6d4bb02410756f70f18d92936e}{graph\_ds}} *\textcolor{keyword}{this}, \textcolor{keywordtype}{void} *a, \textcolor{keywordtype}{void} *b);}
+\DoxyCodeLine{58 }
+\DoxyCodeLine{66 \textcolor{keywordtype}{int} \mbox{\hyperlink{graph_8h_af904a30c399c0e1e5c90b32cfbc63a1e}{graph\_remove\_vertex}}(\mbox{\hyperlink{graph_8h_a0e667b6d4bb02410756f70f18d92936e}{graph\_ds}} *\textcolor{keyword}{this}, \textcolor{keywordtype}{void} *label);}
+\DoxyCodeLine{67 }
+\DoxyCodeLine{76 \textcolor{keywordtype}{int} \mbox{\hyperlink{graph_8h_a14e1efae23fb26b6b5dd9460d053565d}{graph\_has\_edge}}(\mbox{\hyperlink{graph_8h_a0e667b6d4bb02410756f70f18d92936e}{graph\_ds}} *\textcolor{keyword}{this}, \textcolor{keywordtype}{void} *a, \textcolor{keywordtype}{void} *b);}
+\DoxyCodeLine{77 }
+\DoxyCodeLine{86 \mbox{\hyperlink{deque_8h_ad6000210e59a7896402f3a38b25d4ae8}{deque\_ds}} *\mbox{\hyperlink{graph_8h_a5e65fba426ee911393c03f53768338a7}{graph\_breadth\_first\_search}}(\mbox{\hyperlink{graph_8h_a0e667b6d4bb02410756f70f18d92936e}{graph\_ds}} *\textcolor{keyword}{this}, \textcolor{keywordtype}{void} *origin);}
+\DoxyCodeLine{87 }
+\DoxyCodeLine{96 \mbox{\hyperlink{deque_8h_ad6000210e59a7896402f3a38b25d4ae8}{deque\_ds}} *\mbox{\hyperlink{graph_8h_add1381c8a0ef4395dde02572f19ee292}{graph\_depth\_first\_search}}(\mbox{\hyperlink{graph_8h_a0e667b6d4bb02410756f70f18d92936e}{graph\_ds}} *\textcolor{keyword}{this}, \textcolor{keywordtype}{void} *origin);}
+\DoxyCodeLine{97 }
+\DoxyCodeLine{106 \textcolor{keywordtype}{double} \mbox{\hyperlink{graph_8h_aeceddab7f52da91c79045c13db9daa75}{graph\_cheapest\_path}}(\mbox{\hyperlink{graph_8h_a0e667b6d4bb02410756f70f18d92936e}{graph\_ds}} *\textcolor{keyword}{this}, \textcolor{keywordtype}{void} *a, \textcolor{keywordtype}{void} *b, \mbox{\hyperlink{deque_8h_ad6000210e59a7896402f3a38b25d4ae8}{deque\_ds}} *stack);}
+\DoxyCodeLine{107 }
+\DoxyCodeLine{108 \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

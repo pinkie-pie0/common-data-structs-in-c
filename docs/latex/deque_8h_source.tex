@@ -1,0 +1,42 @@
+\hypertarget{deque_8h_source}{}\doxysection{deque.\+h}
+\label{deque_8h_source}\index{inc/deque.h@{inc/deque.h}}
+\mbox{\hyperlink{deque_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#ifndef DEQUE\_H}}
+\DoxyCodeLine{2 \textcolor{preprocessor}{\#define DEQUE\_H}}
+\DoxyCodeLine{3 }
+\DoxyCodeLine{7 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{deque_8h_ad6000210e59a7896402f3a38b25d4ae8}{deque\_ds}} \mbox{\hyperlink{deque_8h_ad6000210e59a7896402f3a38b25d4ae8}{deque\_ds}};}
+\DoxyCodeLine{8 }
+\DoxyCodeLine{14 \mbox{\hyperlink{deque_8h_ad6000210e59a7896402f3a38b25d4ae8}{deque\_ds}} *\mbox{\hyperlink{deque_8h_a5698228e61d294365bb94d54b9d79458}{alloc\_deque}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{15 }
+\DoxyCodeLine{21 \textcolor{keywordtype}{void} \mbox{\hyperlink{deque_8h_aa374f509ff4788627553316a6fb2cfe1}{dealloc\_deque}}(\mbox{\hyperlink{deque_8h_ad6000210e59a7896402f3a38b25d4ae8}{deque\_ds}} *\textcolor{keyword}{this});}
+\DoxyCodeLine{22 }
+\DoxyCodeLine{29 \textcolor{keywordtype}{void} \mbox{\hyperlink{deque_8h_a5f8c4cb303c78cf27e18e4601cd365d5}{deque\_pushleft}}(\mbox{\hyperlink{deque_8h_ad6000210e59a7896402f3a38b25d4ae8}{deque\_ds}} *\textcolor{keyword}{this}, \textcolor{keywordtype}{void} *el);}
+\DoxyCodeLine{30 }
+\DoxyCodeLine{37 \textcolor{keywordtype}{void} \mbox{\hyperlink{deque_8h_aaac68ca0372c6023be916d1004dbdd0d}{deque\_pushright}}(\mbox{\hyperlink{deque_8h_ad6000210e59a7896402f3a38b25d4ae8}{deque\_ds}} *\textcolor{keyword}{this}, \textcolor{keywordtype}{void} *el);}
+\DoxyCodeLine{38 }
+\DoxyCodeLine{45 \textcolor{keywordtype}{void} *\mbox{\hyperlink{deque_8h_a0b0e686f6e9fb974dd3a3a9a9449d43c}{deque\_popleft}}(\mbox{\hyperlink{deque_8h_ad6000210e59a7896402f3a38b25d4ae8}{deque\_ds}} *\textcolor{keyword}{this});}
+\DoxyCodeLine{46 }
+\DoxyCodeLine{53 \textcolor{keywordtype}{void} *\mbox{\hyperlink{deque_8h_ad137ad07ce5ac4746906cb9c1835642c}{deque\_popright}}(\mbox{\hyperlink{deque_8h_ad6000210e59a7896402f3a38b25d4ae8}{deque\_ds}} *\textcolor{keyword}{this});}
+\DoxyCodeLine{54 }
+\DoxyCodeLine{61 \textcolor{keywordtype}{void} *\mbox{\hyperlink{deque_8h_a94bc8138ed4b3c4f971764311851a063}{deque\_peekleft}}(\mbox{\hyperlink{deque_8h_ad6000210e59a7896402f3a38b25d4ae8}{deque\_ds}} *\textcolor{keyword}{this});}
+\DoxyCodeLine{62 }
+\DoxyCodeLine{69 \textcolor{keywordtype}{void} *\mbox{\hyperlink{deque_8h_ada2c62ef6b639e4dee67642c6af7197b}{deque\_peekright}}(\mbox{\hyperlink{deque_8h_ad6000210e59a7896402f3a38b25d4ae8}{deque\_ds}} *\textcolor{keyword}{this});}
+\DoxyCodeLine{70 }
+\DoxyCodeLine{74 \textcolor{preprocessor}{\#define deque\_enqueue(this, el) deque\_pushright(this, el)}}
+\DoxyCodeLine{75 }
+\DoxyCodeLine{79 \textcolor{preprocessor}{\#define deque\_dequeue(this) deque\_popleft(this)}}
+\DoxyCodeLine{80 }
+\DoxyCodeLine{84 \textcolor{preprocessor}{\#define deque\_push(this, el) deque\_pushright(this, el)}}
+\DoxyCodeLine{85 }
+\DoxyCodeLine{89 \textcolor{preprocessor}{\#define deque\_pop(this) deque\_popright(this)}}
+\DoxyCodeLine{90 }
+\DoxyCodeLine{94 \textcolor{preprocessor}{\#define deque\_stackpeek(this) deque\_peekright(this)}}
+\DoxyCodeLine{95 }
+\DoxyCodeLine{99 \textcolor{preprocessor}{\#define deque\_queuepeek(this) deque\_peekleft(this)}}
+\DoxyCodeLine{100 }
+\DoxyCodeLine{107 \textcolor{keywordtype}{int} \mbox{\hyperlink{deque_8h_a92103248cd423f4989a8c06cf12fa55d}{deque\_isempty}}(\mbox{\hyperlink{deque_8h_ad6000210e59a7896402f3a38b25d4ae8}{deque\_ds}} *\textcolor{keyword}{this});}
+\DoxyCodeLine{108 }
+\DoxyCodeLine{109 \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

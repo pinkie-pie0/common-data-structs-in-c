@@ -1,0 +1,34 @@
+\hypertarget{avltree_8h_source}{}\doxysection{avltree.\+h}
+\label{avltree_8h_source}\index{inc/avltree.h@{inc/avltree.h}}
+\mbox{\hyperlink{avltree_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#ifndef AVLTREE\_H}}
+\DoxyCodeLine{2 \textcolor{preprocessor}{\#define AVLTREE\_H}}
+\DoxyCodeLine{3 }
+\DoxyCodeLine{9 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{avltree_8h_a9c44263c618ce62da0798ac35c00f2b5}{avltree\_ds}} \mbox{\hyperlink{avltree_8h_a9c44263c618ce62da0798ac35c00f2b5}{avltree\_ds}};}
+\DoxyCodeLine{10 }
+\DoxyCodeLine{15 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{avltree_8h_aa9ee03100f95e15b0229797dc17e5568}{avltree\_ds\_iterator}} \mbox{\hyperlink{avltree_8h_aa9ee03100f95e15b0229797dc17e5568}{avltree\_ds\_iterator}};}
+\DoxyCodeLine{16 }
+\DoxyCodeLine{23 \mbox{\hyperlink{avltree_8h_a9c44263c618ce62da0798ac35c00f2b5}{avltree\_ds}} *\mbox{\hyperlink{avltree_8h_a3fd6d1b1043eca32d6605b3c772b5ab6}{alloc\_avltree}}(\textcolor{keywordtype}{int} comparator(\textcolor{keyword}{const} \textcolor{keywordtype}{void}*, \textcolor{keyword}{const} \textcolor{keywordtype}{void}*));}
+\DoxyCodeLine{24 }
+\DoxyCodeLine{30 \textcolor{keywordtype}{void} \mbox{\hyperlink{avltree_8h_a3605f679385e3e4ae0b5e0c18db34908}{dealloc\_avltree}}(\mbox{\hyperlink{avltree_8h_a9c44263c618ce62da0798ac35c00f2b5}{avltree\_ds}} *\textcolor{keyword}{this});}
+\DoxyCodeLine{31 }
+\DoxyCodeLine{40 \textcolor{keywordtype}{int} \mbox{\hyperlink{avltree_8h_a9c28b48fb179958d71eccf8852f01462}{avltree\_insert}}(\mbox{\hyperlink{avltree_8h_a9c44263c618ce62da0798ac35c00f2b5}{avltree\_ds}} *\textcolor{keyword}{this}, \textcolor{keywordtype}{void} *val);}
+\DoxyCodeLine{41 }
+\DoxyCodeLine{49 \textcolor{keywordtype}{int} \mbox{\hyperlink{avltree_8h_a00ce8b1b5225e43f716eac5d6b902cca}{avltree\_remove}}(\mbox{\hyperlink{avltree_8h_a9c44263c618ce62da0798ac35c00f2b5}{avltree\_ds}} *\textcolor{keyword}{this}, \textcolor{keywordtype}{void} *val);}
+\DoxyCodeLine{50 }
+\DoxyCodeLine{57 \textcolor{keywordtype}{void} *\mbox{\hyperlink{avltree_8h_a48c967e1554696d3757bcab021cc8414}{avltree\_min}}(\mbox{\hyperlink{avltree_8h_a9c44263c618ce62da0798ac35c00f2b5}{avltree\_ds}} *\textcolor{keyword}{this});}
+\DoxyCodeLine{58 }
+\DoxyCodeLine{65 \textcolor{keywordtype}{void} *\mbox{\hyperlink{avltree_8h_ae113df89514bfd54de218879647c5622}{avltree\_max}}(\mbox{\hyperlink{avltree_8h_a9c44263c618ce62da0798ac35c00f2b5}{avltree\_ds}} *\textcolor{keyword}{this});}
+\DoxyCodeLine{66 }
+\DoxyCodeLine{73 \mbox{\hyperlink{avltree_8h_aa9ee03100f95e15b0229797dc17e5568}{avltree\_ds\_iterator}} *\mbox{\hyperlink{avltree_8h_a975f507210dbef2d9afbd729467e1d42}{alloc\_avltree\_iterator}}(\mbox{\hyperlink{avltree_8h_a9c44263c618ce62da0798ac35c00f2b5}{avltree\_ds}} *\textcolor{keyword}{this});}
+\DoxyCodeLine{74 }
+\DoxyCodeLine{80 \textcolor{keywordtype}{void} \mbox{\hyperlink{avltree_8h_aa46f2fc6f5671efabca8de2c6f838bdd}{dealloc\_avltree\_iterator}}(\mbox{\hyperlink{avltree_8h_aa9ee03100f95e15b0229797dc17e5568}{avltree\_ds\_iterator}} *itr);}
+\DoxyCodeLine{81 }
+\DoxyCodeLine{88 \textcolor{keywordtype}{int} \mbox{\hyperlink{avltree_8h_ade1b8b40bd01c631df2490b84691460d}{avltree\_iterator\_hasnext}}(\mbox{\hyperlink{avltree_8h_aa9ee03100f95e15b0229797dc17e5568}{avltree\_ds\_iterator}} *itr);}
+\DoxyCodeLine{89 }
+\DoxyCodeLine{98 \textcolor{keywordtype}{void} *\mbox{\hyperlink{avltree_8h_ad4a3e4bc89d03ba673ef828f69850223}{avltree\_iterator\_next}}(\mbox{\hyperlink{avltree_8h_aa9ee03100f95e15b0229797dc17e5568}{avltree\_ds\_iterator}} *itr);}
+\DoxyCodeLine{99 }
+\DoxyCodeLine{100 \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

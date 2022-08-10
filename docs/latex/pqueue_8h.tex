@@ -1,0 +1,148 @@
+\hypertarget{pqueue_8h}{}\doxysection{inc/pqueue.h File Reference}
+\label{pqueue_8h}\index{inc/pqueue.h@{inc/pqueue.h}}
+\doxysubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef struct \mbox{\hyperlink{pqueue_8h_aae93c5d6f22854c6f599e3f3728d577a}{pqueue\+\_\+ds}} \mbox{\hyperlink{pqueue_8h_aae93c5d6f22854c6f599e3f3728d577a}{pqueue\+\_\+ds}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{pqueue_8h_aae93c5d6f22854c6f599e3f3728d577a}{pqueue\+\_\+ds}} $\ast$ \mbox{\hyperlink{pqueue_8h_a5b166cbcbe0919fcba6aba7dcd50e10c}{alloc\+\_\+pqueue}} (int comparator(const void $\ast$, const void $\ast$))
+\item 
+void \mbox{\hyperlink{pqueue_8h_ac94890e202a4cce327726b436994944b}{dealloc\+\_\+pqueue}} (\mbox{\hyperlink{pqueue_8h_aae93c5d6f22854c6f599e3f3728d577a}{pqueue\+\_\+ds}} $\ast$this)
+\item 
+int \mbox{\hyperlink{pqueue_8h_a35707a5c1f42b8306faf99aa5ebc67bb}{pqueue\+\_\+enqueue}} (\mbox{\hyperlink{pqueue_8h_aae93c5d6f22854c6f599e3f3728d577a}{pqueue\+\_\+ds}} $\ast$this, void $\ast$element)
+\item 
+void $\ast$ \mbox{\hyperlink{pqueue_8h_a64d4bb6abb5ed2fdd6458c0d66cbb98c}{pqueue\+\_\+dequeue}} (\mbox{\hyperlink{pqueue_8h_aae93c5d6f22854c6f599e3f3728d577a}{pqueue\+\_\+ds}} $\ast$this)
+\item 
+void \mbox{\hyperlink{pqueue_8h_a01304f29b7fe44bebaa4ef523e827c16}{pqueue\+\_\+update}} (\mbox{\hyperlink{pqueue_8h_aae93c5d6f22854c6f599e3f3728d577a}{pqueue\+\_\+ds}} $\ast$this, void $\ast$element)
+\item 
+void $\ast$ \mbox{\hyperlink{pqueue_8h_acf1979058a1484858ee117945a7db107}{pqueue\+\_\+remove}} (\mbox{\hyperlink{pqueue_8h_aae93c5d6f22854c6f599e3f3728d577a}{pqueue\+\_\+ds}} $\ast$this, void $\ast$element)
+\item 
+void $\ast$ \mbox{\hyperlink{pqueue_8h_a05cccde0c1b99d06cfd9b19c915210da}{pqueue\+\_\+peek}} (\mbox{\hyperlink{pqueue_8h_aae93c5d6f22854c6f599e3f3728d577a}{pqueue\+\_\+ds}} $\ast$this)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Typedef Documentation}
+\mbox{\Hypertarget{pqueue_8h_aae93c5d6f22854c6f599e3f3728d577a}\label{pqueue_8h_aae93c5d6f22854c6f599e3f3728d577a}} 
+\index{pqueue.h@{pqueue.h}!pqueue\_ds@{pqueue\_ds}}
+\index{pqueue\_ds@{pqueue\_ds}!pqueue.h@{pqueue.h}}
+\doxysubsubsection{\texorpdfstring{pqueue\_ds}{pqueue\_ds}}
+{\footnotesize\ttfamily typedef struct \mbox{\hyperlink{pqueue_8h_aae93c5d6f22854c6f599e3f3728d577a}{pqueue\+\_\+ds}} \mbox{\hyperlink{pqueue_8h_aae93c5d6f22854c6f599e3f3728d577a}{pqueue\+\_\+ds}}}
+
+Forward declaration of the pqueue data structure. Internally implemented as a 4-\/ary heap with a hashmap ensuring no duplicate elements (think unordered\+\_\+map$<$element, index$>$). Elements are enqueued accordingly to the given comparator function. 
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{pqueue_8h_a5b166cbcbe0919fcba6aba7dcd50e10c}\label{pqueue_8h_a5b166cbcbe0919fcba6aba7dcd50e10c}} 
+\index{pqueue.h@{pqueue.h}!alloc\_pqueue@{alloc\_pqueue}}
+\index{alloc\_pqueue@{alloc\_pqueue}!pqueue.h@{pqueue.h}}
+\doxysubsubsection{\texorpdfstring{alloc\_pqueue()}{alloc\_pqueue()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{pqueue_8h_aae93c5d6f22854c6f599e3f3728d577a}{pqueue\+\_\+ds}} $\ast$ alloc\+\_\+pqueue (\begin{DoxyParamCaption}\item[{int }]{comparatorconst void $\ast$, const void $\ast$ }\end{DoxyParamCaption})}
+
+Allocates an pqueue instance with the given comparator function.
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em comparator} & function that compares values \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+instance of the pqueue 
+\end{DoxyReturn}
+\mbox{\Hypertarget{pqueue_8h_ac94890e202a4cce327726b436994944b}\label{pqueue_8h_ac94890e202a4cce327726b436994944b}} 
+\index{pqueue.h@{pqueue.h}!dealloc\_pqueue@{dealloc\_pqueue}}
+\index{dealloc\_pqueue@{dealloc\_pqueue}!pqueue.h@{pqueue.h}}
+\doxysubsubsection{\texorpdfstring{dealloc\_pqueue()}{dealloc\_pqueue()}}
+{\footnotesize\ttfamily void dealloc\+\_\+pqueue (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{pqueue_8h_aae93c5d6f22854c6f599e3f3728d577a}{pqueue\+\_\+ds}} $\ast$}]{this }\end{DoxyParamCaption})}
+
+Deallocates a pqueue.
+
+
+\begin{DoxyParams}{Parameters}
+{\em this} & deallocates the given pqueue \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{pqueue_8h_a64d4bb6abb5ed2fdd6458c0d66cbb98c}\label{pqueue_8h_a64d4bb6abb5ed2fdd6458c0d66cbb98c}} 
+\index{pqueue.h@{pqueue.h}!pqueue\_dequeue@{pqueue\_dequeue}}
+\index{pqueue\_dequeue@{pqueue\_dequeue}!pqueue.h@{pqueue.h}}
+\doxysubsubsection{\texorpdfstring{pqueue\_dequeue()}{pqueue\_dequeue()}}
+{\footnotesize\ttfamily void $\ast$ pqueue\+\_\+dequeue (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{pqueue_8h_aae93c5d6f22854c6f599e3f3728d577a}{pqueue\+\_\+ds}} $\ast$}]{this }\end{DoxyParamCaption})}
+
+Removes and retrieves the head of the pqueue.
+
+
+\begin{DoxyParams}{Parameters}
+{\em this} & given pqueue instance \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+pointer to the element, or NULL if pqueue is empty 
+\end{DoxyReturn}
+\mbox{\Hypertarget{pqueue_8h_a35707a5c1f42b8306faf99aa5ebc67bb}\label{pqueue_8h_a35707a5c1f42b8306faf99aa5ebc67bb}} 
+\index{pqueue.h@{pqueue.h}!pqueue\_enqueue@{pqueue\_enqueue}}
+\index{pqueue\_enqueue@{pqueue\_enqueue}!pqueue.h@{pqueue.h}}
+\doxysubsubsection{\texorpdfstring{pqueue\_enqueue()}{pqueue\_enqueue()}}
+{\footnotesize\ttfamily int pqueue\+\_\+enqueue (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{pqueue_8h_aae93c5d6f22854c6f599e3f3728d577a}{pqueue\+\_\+ds}} $\ast$}]{this,  }\item[{void $\ast$}]{element }\end{DoxyParamCaption})}
+
+Inserts an element in the given pqueue.
+
+
+\begin{DoxyParams}[1]{Parameters}
+ & {\em this} & given pqueue instance \\
+\hline
+\mbox{\texttt{ in}}  & {\em element} & given element \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+truey if element didnt exist prior to insertion, falsey otherwise 
+\end{DoxyReturn}
+\mbox{\Hypertarget{pqueue_8h_a05cccde0c1b99d06cfd9b19c915210da}\label{pqueue_8h_a05cccde0c1b99d06cfd9b19c915210da}} 
+\index{pqueue.h@{pqueue.h}!pqueue\_peek@{pqueue\_peek}}
+\index{pqueue\_peek@{pqueue\_peek}!pqueue.h@{pqueue.h}}
+\doxysubsubsection{\texorpdfstring{pqueue\_peek()}{pqueue\_peek()}}
+{\footnotesize\ttfamily void $\ast$ pqueue\+\_\+peek (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{pqueue_8h_aae93c5d6f22854c6f599e3f3728d577a}{pqueue\+\_\+ds}} $\ast$}]{this }\end{DoxyParamCaption})}
+
+Retrieves the head of the pqueue without removing it.
+
+
+\begin{DoxyParams}{Parameters}
+{\em this} & given pqueue instance \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+pointer to the element, or NULL if pqueue is empty 
+\end{DoxyReturn}
+\mbox{\Hypertarget{pqueue_8h_acf1979058a1484858ee117945a7db107}\label{pqueue_8h_acf1979058a1484858ee117945a7db107}} 
+\index{pqueue.h@{pqueue.h}!pqueue\_remove@{pqueue\_remove}}
+\index{pqueue\_remove@{pqueue\_remove}!pqueue.h@{pqueue.h}}
+\doxysubsubsection{\texorpdfstring{pqueue\_remove()}{pqueue\_remove()}}
+{\footnotesize\ttfamily void $\ast$ pqueue\+\_\+remove (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{pqueue_8h_aae93c5d6f22854c6f599e3f3728d577a}{pqueue\+\_\+ds}} $\ast$}]{this,  }\item[{void $\ast$}]{element }\end{DoxyParamCaption})}
+
+Given an element, tests if it exists in the pqueue and if so removes and returns the pointer to it.
+
+
+\begin{DoxyParams}[1]{Parameters}
+ & {\em this} & given pqueue instance \\
+\hline
+\mbox{\texttt{ in}}  & {\em element} & given element \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+pointer to the given element, or NULL if element doesn\textquotesingle{}t exist in pqueue 
+\end{DoxyReturn}
+\mbox{\Hypertarget{pqueue_8h_a01304f29b7fe44bebaa4ef523e827c16}\label{pqueue_8h_a01304f29b7fe44bebaa4ef523e827c16}} 
+\index{pqueue.h@{pqueue.h}!pqueue\_update@{pqueue\_update}}
+\index{pqueue\_update@{pqueue\_update}!pqueue.h@{pqueue.h}}
+\doxysubsubsection{\texorpdfstring{pqueue\_update()}{pqueue\_update()}}
+{\footnotesize\ttfamily void pqueue\+\_\+update (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{pqueue_8h_aae93c5d6f22854c6f599e3f3728d577a}{pqueue\+\_\+ds}} $\ast$}]{this,  }\item[{void $\ast$}]{element }\end{DoxyParamCaption})}
+
+Given an element, checks to see if its priority has been changed and if so the pqueue is updated.
+
+
+\begin{DoxyParams}[1]{Parameters}
+ & {\em this} & given pqueue instance \\
+\hline
+\mbox{\texttt{ in}}  & {\em element} & given element \\
+\hline
+\end{DoxyParams}

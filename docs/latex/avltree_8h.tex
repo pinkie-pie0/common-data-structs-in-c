@@ -1,0 +1,206 @@
+\hypertarget{avltree_8h}{}\doxysection{inc/avltree.h File Reference}
+\label{avltree_8h}\index{inc/avltree.h@{inc/avltree.h}}
+\doxysubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef struct \mbox{\hyperlink{avltree_8h_a9c44263c618ce62da0798ac35c00f2b5}{avltree\+\_\+ds}} \mbox{\hyperlink{avltree_8h_a9c44263c618ce62da0798ac35c00f2b5}{avltree\+\_\+ds}}
+\item 
+typedef struct \mbox{\hyperlink{avltree_8h_aa9ee03100f95e15b0229797dc17e5568}{avltree\+\_\+ds\+\_\+iterator}} \mbox{\hyperlink{avltree_8h_aa9ee03100f95e15b0229797dc17e5568}{avltree\+\_\+ds\+\_\+iterator}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{avltree_8h_a9c44263c618ce62da0798ac35c00f2b5}{avltree\+\_\+ds}} $\ast$ \mbox{\hyperlink{avltree_8h_a3fd6d1b1043eca32d6605b3c772b5ab6}{alloc\+\_\+avltree}} (int comparator(const void $\ast$, const void $\ast$))
+\item 
+void \mbox{\hyperlink{avltree_8h_a3605f679385e3e4ae0b5e0c18db34908}{dealloc\+\_\+avltree}} (\mbox{\hyperlink{avltree_8h_a9c44263c618ce62da0798ac35c00f2b5}{avltree\+\_\+ds}} $\ast$this)
+\item 
+int \mbox{\hyperlink{avltree_8h_a9c28b48fb179958d71eccf8852f01462}{avltree\+\_\+insert}} (\mbox{\hyperlink{avltree_8h_a9c44263c618ce62da0798ac35c00f2b5}{avltree\+\_\+ds}} $\ast$this, void $\ast$val)
+\item 
+int \mbox{\hyperlink{avltree_8h_a00ce8b1b5225e43f716eac5d6b902cca}{avltree\+\_\+remove}} (\mbox{\hyperlink{avltree_8h_a9c44263c618ce62da0798ac35c00f2b5}{avltree\+\_\+ds}} $\ast$this, void $\ast$val)
+\item 
+void $\ast$ \mbox{\hyperlink{avltree_8h_a48c967e1554696d3757bcab021cc8414}{avltree\+\_\+min}} (\mbox{\hyperlink{avltree_8h_a9c44263c618ce62da0798ac35c00f2b5}{avltree\+\_\+ds}} $\ast$this)
+\item 
+void $\ast$ \mbox{\hyperlink{avltree_8h_ae113df89514bfd54de218879647c5622}{avltree\+\_\+max}} (\mbox{\hyperlink{avltree_8h_a9c44263c618ce62da0798ac35c00f2b5}{avltree\+\_\+ds}} $\ast$this)
+\item 
+\mbox{\hyperlink{avltree_8h_aa9ee03100f95e15b0229797dc17e5568}{avltree\+\_\+ds\+\_\+iterator}} $\ast$ \mbox{\hyperlink{avltree_8h_a975f507210dbef2d9afbd729467e1d42}{alloc\+\_\+avltree\+\_\+iterator}} (\mbox{\hyperlink{avltree_8h_a9c44263c618ce62da0798ac35c00f2b5}{avltree\+\_\+ds}} $\ast$this)
+\item 
+void \mbox{\hyperlink{avltree_8h_aa46f2fc6f5671efabca8de2c6f838bdd}{dealloc\+\_\+avltree\+\_\+iterator}} (\mbox{\hyperlink{avltree_8h_aa9ee03100f95e15b0229797dc17e5568}{avltree\+\_\+ds\+\_\+iterator}} $\ast$itr)
+\item 
+int \mbox{\hyperlink{avltree_8h_ade1b8b40bd01c631df2490b84691460d}{avltree\+\_\+iterator\+\_\+hasnext}} (\mbox{\hyperlink{avltree_8h_aa9ee03100f95e15b0229797dc17e5568}{avltree\+\_\+ds\+\_\+iterator}} $\ast$itr)
+\item 
+void $\ast$ \mbox{\hyperlink{avltree_8h_ad4a3e4bc89d03ba673ef828f69850223}{avltree\+\_\+iterator\+\_\+next}} (\mbox{\hyperlink{avltree_8h_aa9ee03100f95e15b0229797dc17e5568}{avltree\+\_\+ds\+\_\+iterator}} $\ast$itr)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Typedef Documentation}
+\mbox{\Hypertarget{avltree_8h_a9c44263c618ce62da0798ac35c00f2b5}\label{avltree_8h_a9c44263c618ce62da0798ac35c00f2b5}} 
+\index{avltree.h@{avltree.h}!avltree\_ds@{avltree\_ds}}
+\index{avltree\_ds@{avltree\_ds}!avltree.h@{avltree.h}}
+\doxysubsubsection{\texorpdfstring{avltree\_ds}{avltree\_ds}}
+{\footnotesize\ttfamily typedef struct \mbox{\hyperlink{avltree_8h_a9c44263c618ce62da0798ac35c00f2b5}{avltree\+\_\+ds}} \mbox{\hyperlink{avltree_8h_a9c44263c618ce62da0798ac35c00f2b5}{avltree\+\_\+ds}}}
+
+Forward declaration of the avltree data structure. Internally implemented with a nested struct pointer (node containg the value and its left and right children). In addition, the node contains a height variable as it helps the tree keep balance whilist insertions and deletions occur. \mbox{\Hypertarget{avltree_8h_aa9ee03100f95e15b0229797dc17e5568}\label{avltree_8h_aa9ee03100f95e15b0229797dc17e5568}} 
+\index{avltree.h@{avltree.h}!avltree\_ds\_iterator@{avltree\_ds\_iterator}}
+\index{avltree\_ds\_iterator@{avltree\_ds\_iterator}!avltree.h@{avltree.h}}
+\doxysubsubsection{\texorpdfstring{avltree\_ds\_iterator}{avltree\_ds\_iterator}}
+{\footnotesize\ttfamily typedef struct \mbox{\hyperlink{avltree_8h_aa9ee03100f95e15b0229797dc17e5568}{avltree\+\_\+ds\+\_\+iterator}} \mbox{\hyperlink{avltree_8h_aa9ee03100f95e15b0229797dc17e5568}{avltree\+\_\+ds\+\_\+iterator}}}
+
+Forward declaration of an avltree iterator. Internally implemented with a deque that iterates through the nodes in an in-\/order traversal. 
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{avltree_8h_a3fd6d1b1043eca32d6605b3c772b5ab6}\label{avltree_8h_a3fd6d1b1043eca32d6605b3c772b5ab6}} 
+\index{avltree.h@{avltree.h}!alloc\_avltree@{alloc\_avltree}}
+\index{alloc\_avltree@{alloc\_avltree}!avltree.h@{avltree.h}}
+\doxysubsubsection{\texorpdfstring{alloc\_avltree()}{alloc\_avltree()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{avltree_8h_a9c44263c618ce62da0798ac35c00f2b5}{avltree\+\_\+ds}} $\ast$ alloc\+\_\+avltree (\begin{DoxyParamCaption}\item[{int }]{comparatorconst void $\ast$, const void $\ast$ }\end{DoxyParamCaption})}
+
+Allocates an avltree instance with the given comparator function.
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em comparator} & function that compares values \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+instance of the avltree 
+\end{DoxyReturn}
+\mbox{\Hypertarget{avltree_8h_a975f507210dbef2d9afbd729467e1d42}\label{avltree_8h_a975f507210dbef2d9afbd729467e1d42}} 
+\index{avltree.h@{avltree.h}!alloc\_avltree\_iterator@{alloc\_avltree\_iterator}}
+\index{alloc\_avltree\_iterator@{alloc\_avltree\_iterator}!avltree.h@{avltree.h}}
+\doxysubsubsection{\texorpdfstring{alloc\_avltree\_iterator()}{alloc\_avltree\_iterator()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{avltree_8h_aa9ee03100f95e15b0229797dc17e5568}{avltree\+\_\+ds\+\_\+iterator}} $\ast$ alloc\+\_\+avltree\+\_\+iterator (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{avltree_8h_a9c44263c618ce62da0798ac35c00f2b5}{avltree\+\_\+ds}} $\ast$}]{this }\end{DoxyParamCaption})}
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em this} & given avltree instance \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+allocated avltree iterator 
+\end{DoxyReturn}
+\mbox{\Hypertarget{avltree_8h_a9c28b48fb179958d71eccf8852f01462}\label{avltree_8h_a9c28b48fb179958d71eccf8852f01462}} 
+\index{avltree.h@{avltree.h}!avltree\_insert@{avltree\_insert}}
+\index{avltree\_insert@{avltree\_insert}!avltree.h@{avltree.h}}
+\doxysubsubsection{\texorpdfstring{avltree\_insert()}{avltree\_insert()}}
+{\footnotesize\ttfamily int avltree\+\_\+insert (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{avltree_8h_a9c44263c618ce62da0798ac35c00f2b5}{avltree\+\_\+ds}} $\ast$}]{this,  }\item[{void $\ast$}]{val }\end{DoxyParamCaption})}
+
+Inserts a value in the given avltree in the order according to its given comparator.
+
+
+\begin{DoxyParams}[1]{Parameters}
+ & {\em this} & given avltree instance \\
+\hline
+\mbox{\texttt{ in}}  & {\em val} & given pointer to value \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+truey if operation was succesful, falsey otherwise 
+\end{DoxyReturn}
+\mbox{\Hypertarget{avltree_8h_ade1b8b40bd01c631df2490b84691460d}\label{avltree_8h_ade1b8b40bd01c631df2490b84691460d}} 
+\index{avltree.h@{avltree.h}!avltree\_iterator\_hasnext@{avltree\_iterator\_hasnext}}
+\index{avltree\_iterator\_hasnext@{avltree\_iterator\_hasnext}!avltree.h@{avltree.h}}
+\doxysubsubsection{\texorpdfstring{avltree\_iterator\_hasnext()}{avltree\_iterator\_hasnext()}}
+{\footnotesize\ttfamily int avltree\+\_\+iterator\+\_\+hasnext (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{avltree_8h_aa9ee03100f95e15b0229797dc17e5568}{avltree\+\_\+ds\+\_\+iterator}} $\ast$}]{itr }\end{DoxyParamCaption})}
+
+Determines whether there are value left to iterate.
+
+
+\begin{DoxyParams}{Parameters}
+{\em itr} & given avltree iterator \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+truey if there\textquotesingle{}s an value left, falsey otherwise 
+\end{DoxyReturn}
+\mbox{\Hypertarget{avltree_8h_ad4a3e4bc89d03ba673ef828f69850223}\label{avltree_8h_ad4a3e4bc89d03ba673ef828f69850223}} 
+\index{avltree.h@{avltree.h}!avltree\_iterator\_next@{avltree\_iterator\_next}}
+\index{avltree\_iterator\_next@{avltree\_iterator\_next}!avltree.h@{avltree.h}}
+\doxysubsubsection{\texorpdfstring{avltree\_iterator\_next()}{avltree\_iterator\_next()}}
+{\footnotesize\ttfamily void $\ast$ avltree\+\_\+iterator\+\_\+next (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{avltree_8h_aa9ee03100f95e15b0229797dc17e5568}{avltree\+\_\+ds\+\_\+iterator}} $\ast$}]{itr }\end{DoxyParamCaption})}
+
+Retrives the next value in the avltree iterator. Note that if this function is called when \mbox{\hyperlink{avltree_8h_ade1b8b40bd01c631df2490b84691460d}{avltree\+\_\+iterator\+\_\+hasnext()}} returns false, the program aborts abruptly.
+
+
+\begin{DoxyParams}{Parameters}
+{\em itr} & given avltree iterator \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+pointer to the next value 
+\end{DoxyReturn}
+\mbox{\Hypertarget{avltree_8h_ae113df89514bfd54de218879647c5622}\label{avltree_8h_ae113df89514bfd54de218879647c5622}} 
+\index{avltree.h@{avltree.h}!avltree\_max@{avltree\_max}}
+\index{avltree\_max@{avltree\_max}!avltree.h@{avltree.h}}
+\doxysubsubsection{\texorpdfstring{avltree\_max()}{avltree\_max()}}
+{\footnotesize\ttfamily void $\ast$ avltree\+\_\+max (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{avltree_8h_a9c44263c618ce62da0798ac35c00f2b5}{avltree\+\_\+ds}} $\ast$}]{this }\end{DoxyParamCaption})}
+
+Retrives the largest value existing in the avltree.
+
+
+\begin{DoxyParams}{Parameters}
+{\em this} & given avltree instance \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+pointer to max value or NULL if tree is empty 
+\end{DoxyReturn}
+\mbox{\Hypertarget{avltree_8h_a48c967e1554696d3757bcab021cc8414}\label{avltree_8h_a48c967e1554696d3757bcab021cc8414}} 
+\index{avltree.h@{avltree.h}!avltree\_min@{avltree\_min}}
+\index{avltree\_min@{avltree\_min}!avltree.h@{avltree.h}}
+\doxysubsubsection{\texorpdfstring{avltree\_min()}{avltree\_min()}}
+{\footnotesize\ttfamily void $\ast$ avltree\+\_\+min (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{avltree_8h_a9c44263c618ce62da0798ac35c00f2b5}{avltree\+\_\+ds}} $\ast$}]{this }\end{DoxyParamCaption})}
+
+Retrives the smallest value existing in the avltree.
+
+
+\begin{DoxyParams}{Parameters}
+{\em this} & given avltree instance \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+pointer to min value or NULL if tree is empty 
+\end{DoxyReturn}
+\mbox{\Hypertarget{avltree_8h_a00ce8b1b5225e43f716eac5d6b902cca}\label{avltree_8h_a00ce8b1b5225e43f716eac5d6b902cca}} 
+\index{avltree.h@{avltree.h}!avltree\_remove@{avltree\_remove}}
+\index{avltree\_remove@{avltree\_remove}!avltree.h@{avltree.h}}
+\doxysubsubsection{\texorpdfstring{avltree\_remove()}{avltree\_remove()}}
+{\footnotesize\ttfamily int avltree\+\_\+remove (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{avltree_8h_a9c44263c618ce62da0798ac35c00f2b5}{avltree\+\_\+ds}} $\ast$}]{this,  }\item[{void $\ast$}]{val }\end{DoxyParamCaption})}
+
+Removes a value in the given avltree if it already exists.
+
+
+\begin{DoxyParams}[1]{Parameters}
+ & {\em this} & given avltree instance \\
+\hline
+\mbox{\texttt{ in}}  & {\em val} & given pointer to value \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+truey if operation was succesful, falsey otherwise 
+\end{DoxyReturn}
+\mbox{\Hypertarget{avltree_8h_a3605f679385e3e4ae0b5e0c18db34908}\label{avltree_8h_a3605f679385e3e4ae0b5e0c18db34908}} 
+\index{avltree.h@{avltree.h}!dealloc\_avltree@{dealloc\_avltree}}
+\index{dealloc\_avltree@{dealloc\_avltree}!avltree.h@{avltree.h}}
+\doxysubsubsection{\texorpdfstring{dealloc\_avltree()}{dealloc\_avltree()}}
+{\footnotesize\ttfamily void dealloc\+\_\+avltree (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{avltree_8h_a9c44263c618ce62da0798ac35c00f2b5}{avltree\+\_\+ds}} $\ast$}]{this }\end{DoxyParamCaption})}
+
+Deallocates an avltree.
+
+
+\begin{DoxyParams}{Parameters}
+{\em this} & deallocates the given avltree \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{avltree_8h_aa46f2fc6f5671efabca8de2c6f838bdd}\label{avltree_8h_aa46f2fc6f5671efabca8de2c6f838bdd}} 
+\index{avltree.h@{avltree.h}!dealloc\_avltree\_iterator@{dealloc\_avltree\_iterator}}
+\index{dealloc\_avltree\_iterator@{dealloc\_avltree\_iterator}!avltree.h@{avltree.h}}
+\doxysubsubsection{\texorpdfstring{dealloc\_avltree\_iterator()}{dealloc\_avltree\_iterator()}}
+{\footnotesize\ttfamily void dealloc\+\_\+avltree\+\_\+iterator (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{avltree_8h_aa9ee03100f95e15b0229797dc17e5568}{avltree\+\_\+ds\+\_\+iterator}} $\ast$}]{itr }\end{DoxyParamCaption})}
+
+Deallocates an avltree iterator.
+
+
+\begin{DoxyParams}{Parameters}
+{\em itr} & given avltree iterator \\
+\hline
+\end{DoxyParams}

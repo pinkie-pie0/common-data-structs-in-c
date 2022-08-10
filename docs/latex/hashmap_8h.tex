@@ -1,0 +1,289 @@
+\hypertarget{hashmap_8h}{}\doxysection{inc/hashmap.h File Reference}
+\label{hashmap_8h}\index{inc/hashmap.h@{inc/hashmap.h}}
+\doxysubsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{hashmap_8h_structhashmap__entry}{hashmap\+\_\+entry}}
+\item 
+struct \mbox{\hyperlink{hashmap_8h_structhashmap__ds__iterator}{hashmap\+\_\+ds\+\_\+iterator}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef struct \mbox{\hyperlink{hashmap_8h_a6b2fd302e760325e5f306d24553e8fe7}{hashmap\+\_\+ds}} \mbox{\hyperlink{hashmap_8h_a6b2fd302e760325e5f306d24553e8fe7}{hashmap\+\_\+ds}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{hashmap_8h_structhashmap__ds__iterator}{hashmap\+\_\+ds\+\_\+iterator}} \mbox{\hyperlink{hashmap_8h_a1a0def08d095fd138b6a2e62a29cb2ba}{hashmap\+\_\+getiterator}} (\mbox{\hyperlink{hashmap_8h_a6b2fd302e760325e5f306d24553e8fe7}{hashmap\+\_\+ds}} $\ast$this)
+\item 
+int \mbox{\hyperlink{hashmap_8h_a2b55865b21d75b3ce2e7e1d473c28e69}{hashmap\+\_\+iterator\+\_\+hasnext}} (\mbox{\hyperlink{hashmap_8h_structhashmap__ds__iterator}{hashmap\+\_\+ds\+\_\+iterator}} $\ast$itr)
+\item 
+\mbox{\hyperlink{hashmap_8h_structhashmap__entry}{hashmap\+\_\+entry}} $\ast$ \mbox{\hyperlink{hashmap_8h_accac5ce179f0a239972f1b119b2a47e0}{hashmap\+\_\+iterator\+\_\+next}} (\mbox{\hyperlink{hashmap_8h_structhashmap__ds__iterator}{hashmap\+\_\+ds\+\_\+iterator}} $\ast$itr)
+\item 
+\mbox{\hyperlink{hashmap_8h_a6b2fd302e760325e5f306d24553e8fe7}{hashmap\+\_\+ds}} $\ast$ \mbox{\hyperlink{hashmap_8h_a606671bcd65d8c1aecaa4362e48fd592}{alloc\+\_\+hashmap}} (int hash(const void $\ast$), int is\+\_\+equals(const void $\ast$, const void $\ast$))
+\item 
+\mbox{\hyperlink{hashmap_8h_a6b2fd302e760325e5f306d24553e8fe7}{hashmap\+\_\+ds}} $\ast$ \mbox{\hyperlink{hashmap_8h_a00397c150a013c4557f3ae2eff05ff6c}{alloc\+\_\+identityhashmap}} (void)
+\item 
+void \mbox{\hyperlink{hashmap_8h_afc14630fda0e0b45117604c49bb8058a}{dealloc\+\_\+hashmap}} (\mbox{\hyperlink{hashmap_8h_a6b2fd302e760325e5f306d24553e8fe7}{hashmap\+\_\+ds}} $\ast$this)
+\item 
+void $\ast$ \mbox{\hyperlink{hashmap_8h_a8262ac84b210b0ca8cb33230222682ff}{hashmap\+\_\+put}} (\mbox{\hyperlink{hashmap_8h_a6b2fd302e760325e5f306d24553e8fe7}{hashmap\+\_\+ds}} $\ast$this, void $\ast$key, void $\ast$value)
+\item 
+void $\ast$ \mbox{\hyperlink{hashmap_8h_a015b4d70995dcf309638c327f19386a3}{hashmap\+\_\+get}} (\mbox{\hyperlink{hashmap_8h_a6b2fd302e760325e5f306d24553e8fe7}{hashmap\+\_\+ds}} $\ast$this, void $\ast$key)
+\item 
+void $\ast$ \mbox{\hyperlink{hashmap_8h_a8a22bec94ac677607409495b6dd1a124}{hashmap\+\_\+get\+\_\+keyref}} (\mbox{\hyperlink{hashmap_8h_a6b2fd302e760325e5f306d24553e8fe7}{hashmap\+\_\+ds}} $\ast$this, void $\ast$key)
+\item 
+void $\ast$ \mbox{\hyperlink{hashmap_8h_a88d39bd286c36f68af26439f25e7c727}{hashmap\+\_\+remove}} (\mbox{\hyperlink{hashmap_8h_a6b2fd302e760325e5f306d24553e8fe7}{hashmap\+\_\+ds}} $\ast$this, void $\ast$key)
+\item 
+\mbox{\hyperlink{hashmap_8h_structhashmap__entry}{hashmap\+\_\+entry}} $\ast$$\ast$ \mbox{\hyperlink{hashmap_8h_a6775f2d70eeda45b885a6190a3507a5f}{hashmap\+\_\+getentries}} (\mbox{\hyperlink{hashmap_8h_a6b2fd302e760325e5f306d24553e8fe7}{hashmap\+\_\+ds}} $\ast$this)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Data Structure Documentation}
+\index{hashmap\_entry@{hashmap\_entry}}\label{structhashmap__entry}
+\Hypertarget{hashmap_8h_structhashmap__entry}
+\doxysubsubsection{struct hashmap\+\_\+entry}
+Basic unit of the hashmap\+: an entry. Some functions like \mbox{\hyperlink{hashmap_8h_a6775f2d70eeda45b885a6190a3507a5f}{hashmap\+\_\+getentries(hashmap\+\_\+ds$\ast$)}} will return a list of entry pointers which contains easily accessible key-\/value pairs at your disposal. \begin{DoxyFields}{Data Fields}
+\mbox{\Hypertarget{hashmap_8h_af72921b6c9e0d21c051d1823f9c59201}\label{hashmap_8h_af72921b6c9e0d21c051d1823f9c59201}} 
+void $\ast$&
+key&
+pointer to key \\
+\hline
+
+\mbox{\Hypertarget{hashmap_8h_ad992a194ec733b2a1751469a7a26e0c3}\label{hashmap_8h_ad992a194ec733b2a1751469a7a26e0c3}} 
+size\_t&
+psl&
+probe sequence length; outside modifications results in undefined behavior \\
+\hline
+
+\mbox{\Hypertarget{hashmap_8h_a5ab8f39113d6b9b64ea457eddf27b48a}\label{hashmap_8h_a5ab8f39113d6b9b64ea457eddf27b48a}} 
+void $\ast$&
+value&
+pointer to value \\
+\hline
+
+\end{DoxyFields}
+\index{hashmap\_ds\_iterator@{hashmap\_ds\_iterator}}\label{structhashmap__ds__iterator}
+\Hypertarget{hashmap_8h_structhashmap__ds__iterator}
+\doxysubsubsection{struct hashmap\+\_\+ds\+\_\+iterator}
+This struct gives functionality to iterate through a hashmap non-\/destructively. At most, the values could be modified for any entry returned. Despite the internals being visible, this shall be treated as an opaque structure with the given functions only, as directly modifying the members can result in undefined behavior.
+
+\begin{DoxySeeAlso}{See also}
+\mbox{\hyperlink{hashmap_8h_a1a0def08d095fd138b6a2e62a29cb2ba}{hashmap\+\_\+getiterator(hashmap\+\_\+ds$\ast$)}} 
+
+\mbox{\hyperlink{hashmap_8h_a2b55865b21d75b3ce2e7e1d473c28e69}{hashmap\+\_\+iterator\+\_\+hasnext(hashmap\+\_\+ds\+\_\+iterator$\ast$)}} 
+
+\mbox{\hyperlink{hashmap_8h_accac5ce179f0a239972f1b119b2a47e0}{hashmap\+\_\+iterator\+\_\+next(hashmap\+\_\+ds\+\_\+iterator$\ast$)}} 
+\end{DoxySeeAlso}
+\begin{DoxyFields}{Data Fields}
+\mbox{\Hypertarget{hashmap_8h_aeca040a79aa6191c80f3ae0220cdf2ba}\label{hashmap_8h_aeca040a79aa6191c80f3ae0220cdf2ba}} 
+\mbox{\hyperlink{hashmap_8h_structhashmap__entry}{hashmap\_entry}} $\ast$$\ast$&
+entries&
+given entries to iterate on \\
+\hline
+
+\mbox{\Hypertarget{hashmap_8h_aa3eb03be98ec47cc4890244a4d932990}\label{hashmap_8h_aa3eb03be98ec47cc4890244a4d932990}} 
+size\_t&
+index&
+current key/value pair out of current hashmap size \\
+\hline
+
+\mbox{\Hypertarget{hashmap_8h_aafe8383d0ba2d6a3d29a1241033a4248}\label{hashmap_8h_aafe8383d0ba2d6a3d29a1241033a4248}} 
+\mbox{\hyperlink{hashmap_8h_a6b2fd302e760325e5f306d24553e8fe7}{hashmap\_ds}} $\ast$&
+map&
+given hashmap instance \\
+\hline
+
+\end{DoxyFields}
+
+
+\doxysubsection{Typedef Documentation}
+\mbox{\Hypertarget{hashmap_8h_a6b2fd302e760325e5f306d24553e8fe7}\label{hashmap_8h_a6b2fd302e760325e5f306d24553e8fe7}} 
+\index{hashmap.h@{hashmap.h}!hashmap\_ds@{hashmap\_ds}}
+\index{hashmap\_ds@{hashmap\_ds}!hashmap.h@{hashmap.h}}
+\doxysubsubsection{\texorpdfstring{hashmap\_ds}{hashmap\_ds}}
+{\footnotesize\ttfamily typedef struct \mbox{\hyperlink{hashmap_8h_a6b2fd302e760325e5f306d24553e8fe7}{hashmap\+\_\+ds}} \mbox{\hyperlink{hashmap_8h_a6b2fd302e760325e5f306d24553e8fe7}{hashmap\+\_\+ds}}}
+
+Forward declaration of the hashmap data structure. Internally implemented as a dynamic list of entry pointers using robin-\/hood open addressing. 
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{hashmap_8h_a606671bcd65d8c1aecaa4362e48fd592}\label{hashmap_8h_a606671bcd65d8c1aecaa4362e48fd592}} 
+\index{hashmap.h@{hashmap.h}!alloc\_hashmap@{alloc\_hashmap}}
+\index{alloc\_hashmap@{alloc\_hashmap}!hashmap.h@{hashmap.h}}
+\doxysubsubsection{\texorpdfstring{alloc\_hashmap()}{alloc\_hashmap()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{hashmap_8h_a6b2fd302e760325e5f306d24553e8fe7}{hashmap\+\_\+ds}} $\ast$ alloc\+\_\+hashmap (\begin{DoxyParamCaption}\item[{int }]{hashconst void $\ast$,  }\item[{int }]{is\+\_\+equalsconst void $\ast$, const void $\ast$ }\end{DoxyParamCaption})}
+
+Allocates a hashmap instance with given hash/equality functions and a default capacity of 16, and default load factor of 0.\+75.
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em hash} & key-\/hash function \\
+\hline
+\mbox{\texttt{ in}}  & {\em is\+\_\+equals} & key-\/equality function \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+instance of the hashmap 
+\end{DoxyReturn}
+\mbox{\Hypertarget{hashmap_8h_a00397c150a013c4557f3ae2eff05ff6c}\label{hashmap_8h_a00397c150a013c4557f3ae2eff05ff6c}} 
+\index{hashmap.h@{hashmap.h}!alloc\_identityhashmap@{alloc\_identityhashmap}}
+\index{alloc\_identityhashmap@{alloc\_identityhashmap}!hashmap.h@{hashmap.h}}
+\doxysubsubsection{\texorpdfstring{alloc\_identityhashmap()}{alloc\_identityhashmap()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{hashmap_8h_a6b2fd302e760325e5f306d24553e8fe7}{hashmap\+\_\+ds}} $\ast$ alloc\+\_\+identityhashmap (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+Allocates a hashmap whose hash/equality is determined by the key\textquotesingle{}s identity instead. Other properties are still default according to \mbox{\hyperlink{hashmap_8h_a606671bcd65d8c1aecaa4362e48fd592}{alloc\+\_\+hashmap()}}
+
+\begin{DoxyReturn}{Returns}
+instance of the identity hashmap 
+\end{DoxyReturn}
+\mbox{\Hypertarget{hashmap_8h_afc14630fda0e0b45117604c49bb8058a}\label{hashmap_8h_afc14630fda0e0b45117604c49bb8058a}} 
+\index{hashmap.h@{hashmap.h}!dealloc\_hashmap@{dealloc\_hashmap}}
+\index{dealloc\_hashmap@{dealloc\_hashmap}!hashmap.h@{hashmap.h}}
+\doxysubsubsection{\texorpdfstring{dealloc\_hashmap()}{dealloc\_hashmap()}}
+{\footnotesize\ttfamily void dealloc\+\_\+hashmap (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{hashmap_8h_a6b2fd302e760325e5f306d24553e8fe7}{hashmap\+\_\+ds}} $\ast$}]{this }\end{DoxyParamCaption})}
+
+Deallocates a hashmap.
+
+
+\begin{DoxyParams}{Parameters}
+{\em this} & deallocates the given hashmap \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{hashmap_8h_a015b4d70995dcf309638c327f19386a3}\label{hashmap_8h_a015b4d70995dcf309638c327f19386a3}} 
+\index{hashmap.h@{hashmap.h}!hashmap\_get@{hashmap\_get}}
+\index{hashmap\_get@{hashmap\_get}!hashmap.h@{hashmap.h}}
+\doxysubsubsection{\texorpdfstring{hashmap\_get()}{hashmap\_get()}}
+{\footnotesize\ttfamily void $\ast$ hashmap\+\_\+get (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{hashmap_8h_a6b2fd302e760325e5f306d24553e8fe7}{hashmap\+\_\+ds}} $\ast$}]{this,  }\item[{void $\ast$}]{key }\end{DoxyParamCaption})}
+
+Retrives a value mapped to the given key if it exists in the map.
+
+
+\begin{DoxyParams}[1]{Parameters}
+ & {\em this} & given hashmap instance \\
+\hline
+\mbox{\texttt{ in}}  & {\em key} & given pointer to key \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+pointer to the value if the mapping exists, NULL otherwise 
+\end{DoxyReturn}
+\mbox{\Hypertarget{hashmap_8h_a8a22bec94ac677607409495b6dd1a124}\label{hashmap_8h_a8a22bec94ac677607409495b6dd1a124}} 
+\index{hashmap.h@{hashmap.h}!hashmap\_get\_keyref@{hashmap\_get\_keyref}}
+\index{hashmap\_get\_keyref@{hashmap\_get\_keyref}!hashmap.h@{hashmap.h}}
+\doxysubsubsection{\texorpdfstring{hashmap\_get\_keyref()}{hashmap\_get\_keyref()}}
+{\footnotesize\ttfamily void $\ast$ hashmap\+\_\+get\+\_\+keyref (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{hashmap_8h_a6b2fd302e760325e5f306d24553e8fe7}{hashmap\+\_\+ds}} $\ast$}]{this,  }\item[{void $\ast$}]{key }\end{DoxyParamCaption})}
+
+Retrives the exact pointer to key if the mapping exists in the hashmap. The given key and the retrieved key may not necessarily share the memory address.
+
+
+\begin{DoxyParams}[1]{Parameters}
+ & {\em this} & given hashmap instance \\
+\hline
+\mbox{\texttt{ in}}  & {\em key} & given pointer to key \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+pointer to the key if the mapping exists, NULL otherwise 
+\end{DoxyReturn}
+\mbox{\Hypertarget{hashmap_8h_a6775f2d70eeda45b885a6190a3507a5f}\label{hashmap_8h_a6775f2d70eeda45b885a6190a3507a5f}} 
+\index{hashmap.h@{hashmap.h}!hashmap\_getentries@{hashmap\_getentries}}
+\index{hashmap\_getentries@{hashmap\_getentries}!hashmap.h@{hashmap.h}}
+\doxysubsubsection{\texorpdfstring{hashmap\_getentries()}{hashmap\_getentries()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{hashmap_8h_structhashmap__entry}{hashmap\+\_\+entry}} $\ast$$\ast$ hashmap\+\_\+getentries (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{hashmap_8h_a6b2fd302e760325e5f306d24553e8fe7}{hashmap\+\_\+ds}} $\ast$}]{this }\end{DoxyParamCaption})}
+
+Allocates a NULL-\/terminated list of entries for the given hashmap instance. Must be freed manually if you don\textquotesingle{}t use it anymore!
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em this} & given hashmap instance \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+dynamically allocated list of hashmap entries 
+\end{DoxyReturn}
+\mbox{\Hypertarget{hashmap_8h_a1a0def08d095fd138b6a2e62a29cb2ba}\label{hashmap_8h_a1a0def08d095fd138b6a2e62a29cb2ba}} 
+\index{hashmap.h@{hashmap.h}!hashmap\_getiterator@{hashmap\_getiterator}}
+\index{hashmap\_getiterator@{hashmap\_getiterator}!hashmap.h@{hashmap.h}}
+\doxysubsubsection{\texorpdfstring{hashmap\_getiterator()}{hashmap\_getiterator()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{hashmap_8h_structhashmap__ds__iterator}{hashmap\+\_\+ds\+\_\+iterator}} hashmap\+\_\+getiterator (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{hashmap_8h_a6b2fd302e760325e5f306d24553e8fe7}{hashmap\+\_\+ds}} $\ast$}]{this }\end{DoxyParamCaption})}
+
+Constructs a hashmap iterator.
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em this} & given hashmap instance \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+iterator for the hashmap instance 
+\end{DoxyReturn}
+\mbox{\Hypertarget{hashmap_8h_a2b55865b21d75b3ce2e7e1d473c28e69}\label{hashmap_8h_a2b55865b21d75b3ce2e7e1d473c28e69}} 
+\index{hashmap.h@{hashmap.h}!hashmap\_iterator\_hasnext@{hashmap\_iterator\_hasnext}}
+\index{hashmap\_iterator\_hasnext@{hashmap\_iterator\_hasnext}!hashmap.h@{hashmap.h}}
+\doxysubsubsection{\texorpdfstring{hashmap\_iterator\_hasnext()}{hashmap\_iterator\_hasnext()}}
+{\footnotesize\ttfamily int hashmap\+\_\+iterator\+\_\+hasnext (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{hashmap_8h_structhashmap__ds__iterator}{hashmap\+\_\+ds\+\_\+iterator}} $\ast$}]{itr }\end{DoxyParamCaption})}
+
+Determines whether there are entries left to iterate.
+
+
+\begin{DoxyParams}{Parameters}
+{\em itr} & given iterator instance \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+truey if there\textquotesingle{}s an entry left, falsey otherwise 
+\end{DoxyReturn}
+\mbox{\Hypertarget{hashmap_8h_accac5ce179f0a239972f1b119b2a47e0}\label{hashmap_8h_accac5ce179f0a239972f1b119b2a47e0}} 
+\index{hashmap.h@{hashmap.h}!hashmap\_iterator\_next@{hashmap\_iterator\_next}}
+\index{hashmap\_iterator\_next@{hashmap\_iterator\_next}!hashmap.h@{hashmap.h}}
+\doxysubsubsection{\texorpdfstring{hashmap\_iterator\_next()}{hashmap\_iterator\_next()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{hashmap_8h_structhashmap__entry}{hashmap\+\_\+entry}} $\ast$ hashmap\+\_\+iterator\+\_\+next (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{hashmap_8h_structhashmap__ds__iterator}{hashmap\+\_\+ds\+\_\+iterator}} $\ast$}]{itr }\end{DoxyParamCaption})}
+
+Retrives an entry.
+
+
+\begin{DoxyParams}{Parameters}
+{\em itr} & given iterator instance \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+entry from the ietrator 
+\end{DoxyReturn}
+\mbox{\Hypertarget{hashmap_8h_a8262ac84b210b0ca8cb33230222682ff}\label{hashmap_8h_a8262ac84b210b0ca8cb33230222682ff}} 
+\index{hashmap.h@{hashmap.h}!hashmap\_put@{hashmap\_put}}
+\index{hashmap\_put@{hashmap\_put}!hashmap.h@{hashmap.h}}
+\doxysubsubsection{\texorpdfstring{hashmap\_put()}{hashmap\_put()}}
+{\footnotesize\ttfamily void $\ast$ hashmap\+\_\+put (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{hashmap_8h_a6b2fd302e760325e5f306d24553e8fe7}{hashmap\+\_\+ds}} $\ast$}]{this,  }\item[{void $\ast$}]{key,  }\item[{void $\ast$}]{value }\end{DoxyParamCaption})}
+
+Puts a new key/value pair in the hashmap if it doesn\textquotesingle{}t exist already, otherwise value is replaced.
+
+
+\begin{DoxyParams}[1]{Parameters}
+ & {\em this} & given hashmap instance \\
+\hline
+\mbox{\texttt{ in}}  & {\em key} & given pointer to key \\
+\hline
+\mbox{\texttt{ in}}  & {\em value} & given pointer to value \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+NULL if key/value pair didn\textquotesingle{}t exist prior to insertion, otherwise pointer to the old value that was associated with the key 
+\end{DoxyReturn}
+\mbox{\Hypertarget{hashmap_8h_a88d39bd286c36f68af26439f25e7c727}\label{hashmap_8h_a88d39bd286c36f68af26439f25e7c727}} 
+\index{hashmap.h@{hashmap.h}!hashmap\_remove@{hashmap\_remove}}
+\index{hashmap\_remove@{hashmap\_remove}!hashmap.h@{hashmap.h}}
+\doxysubsubsection{\texorpdfstring{hashmap\_remove()}{hashmap\_remove()}}
+{\footnotesize\ttfamily void $\ast$ hashmap\+\_\+remove (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{hashmap_8h_a6b2fd302e760325e5f306d24553e8fe7}{hashmap\+\_\+ds}} $\ast$}]{this,  }\item[{void $\ast$}]{key }\end{DoxyParamCaption})}
+
+Removes a key/value pair in the hashmap with the given key if it exists in the hashmap, otherwise no effect occurs.
+
+
+\begin{DoxyParams}[1]{Parameters}
+ & {\em this} & given hashmap instance \\
+\hline
+\mbox{\texttt{ in}}  & {\em key} & given pointer to key \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+value that was mapped to key if it exist prior to deletion, NULL otherwise 
+\end{DoxyReturn}

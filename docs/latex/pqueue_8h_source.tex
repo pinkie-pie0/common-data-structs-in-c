@@ -1,0 +1,26 @@
+\hypertarget{pqueue_8h_source}{}\doxysection{pqueue.\+h}
+\label{pqueue_8h_source}\index{inc/pqueue.h@{inc/pqueue.h}}
+\mbox{\hyperlink{pqueue_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#ifndef PQUEUE\_H}}
+\DoxyCodeLine{2 \textcolor{preprocessor}{\#define PQUEUE\_H}}
+\DoxyCodeLine{3 }
+\DoxyCodeLine{9 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{pqueue_8h_aae93c5d6f22854c6f599e3f3728d577a}{pqueue\_ds}} \mbox{\hyperlink{pqueue_8h_aae93c5d6f22854c6f599e3f3728d577a}{pqueue\_ds}};}
+\DoxyCodeLine{10 }
+\DoxyCodeLine{17 \mbox{\hyperlink{pqueue_8h_aae93c5d6f22854c6f599e3f3728d577a}{pqueue\_ds}} *\mbox{\hyperlink{pqueue_8h_a5b166cbcbe0919fcba6aba7dcd50e10c}{alloc\_pqueue}}(\textcolor{keywordtype}{int} comparator(\textcolor{keyword}{const} \textcolor{keywordtype}{void}*,\textcolor{keyword}{const} \textcolor{keywordtype}{void}*));}
+\DoxyCodeLine{18 }
+\DoxyCodeLine{24 \textcolor{keywordtype}{void} \mbox{\hyperlink{pqueue_8h_ac94890e202a4cce327726b436994944b}{dealloc\_pqueue}}(\mbox{\hyperlink{pqueue_8h_aae93c5d6f22854c6f599e3f3728d577a}{pqueue\_ds}} *\textcolor{keyword}{this});}
+\DoxyCodeLine{25 }
+\DoxyCodeLine{33 \textcolor{keywordtype}{int} \mbox{\hyperlink{pqueue_8h_a35707a5c1f42b8306faf99aa5ebc67bb}{pqueue\_enqueue}}(\mbox{\hyperlink{pqueue_8h_aae93c5d6f22854c6f599e3f3728d577a}{pqueue\_ds}} *\textcolor{keyword}{this}, \textcolor{keywordtype}{void} *element);}
+\DoxyCodeLine{34 }
+\DoxyCodeLine{41 \textcolor{keywordtype}{void} *\mbox{\hyperlink{pqueue_8h_a64d4bb6abb5ed2fdd6458c0d66cbb98c}{pqueue\_dequeue}}(\mbox{\hyperlink{pqueue_8h_aae93c5d6f22854c6f599e3f3728d577a}{pqueue\_ds}} *\textcolor{keyword}{this});}
+\DoxyCodeLine{42 }
+\DoxyCodeLine{50 \textcolor{keywordtype}{void} \mbox{\hyperlink{pqueue_8h_a01304f29b7fe44bebaa4ef523e827c16}{pqueue\_update}}(\mbox{\hyperlink{pqueue_8h_aae93c5d6f22854c6f599e3f3728d577a}{pqueue\_ds}} *\textcolor{keyword}{this}, \textcolor{keywordtype}{void} *element);}
+\DoxyCodeLine{51 }
+\DoxyCodeLine{60 \textcolor{keywordtype}{void} *\mbox{\hyperlink{pqueue_8h_acf1979058a1484858ee117945a7db107}{pqueue\_remove}}(\mbox{\hyperlink{pqueue_8h_aae93c5d6f22854c6f599e3f3728d577a}{pqueue\_ds}} *\textcolor{keyword}{this}, \textcolor{keywordtype}{void} *element);}
+\DoxyCodeLine{61 }
+\DoxyCodeLine{68 \textcolor{keywordtype}{void} *\mbox{\hyperlink{pqueue_8h_a05cccde0c1b99d06cfd9b19c915210da}{pqueue\_peek}}(\mbox{\hyperlink{pqueue_8h_aae93c5d6f22854c6f599e3f3728d577a}{pqueue\_ds}} *\textcolor{keyword}{this});}
+\DoxyCodeLine{69 }
+\DoxyCodeLine{70 \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

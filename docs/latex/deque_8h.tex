@@ -1,0 +1,246 @@
+\hypertarget{deque_8h}{}\doxysection{inc/deque.h File Reference}
+\label{deque_8h}\index{inc/deque.h@{inc/deque.h}}
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{deque_8h_a2f758a88f4ce5814b9da1f8bfc7ddf1c}{deque\+\_\+enqueue}}(this,  el)~\mbox{\hyperlink{deque_8h_aaac68ca0372c6023be916d1004dbdd0d}{deque\+\_\+pushright}}(this, el)
+\item 
+\#define \mbox{\hyperlink{deque_8h_a3becd0240338971bd913f11c8ca52ca3}{deque\+\_\+dequeue}}(this)~\mbox{\hyperlink{deque_8h_a0b0e686f6e9fb974dd3a3a9a9449d43c}{deque\+\_\+popleft}}(this)
+\item 
+\#define \mbox{\hyperlink{deque_8h_a3de10be1f6c15168f6ff794d9a78f81a}{deque\+\_\+push}}(this,  el)~\mbox{\hyperlink{deque_8h_aaac68ca0372c6023be916d1004dbdd0d}{deque\+\_\+pushright}}(this, el)
+\item 
+\#define \mbox{\hyperlink{deque_8h_aa27d95262677c8a617359b19d3abae28}{deque\+\_\+pop}}(this)~\mbox{\hyperlink{deque_8h_ad137ad07ce5ac4746906cb9c1835642c}{deque\+\_\+popright}}(this)
+\item 
+\#define \mbox{\hyperlink{deque_8h_a0f368dacb6d5905f746afbcee55ddc53}{deque\+\_\+stackpeek}}(this)~\mbox{\hyperlink{deque_8h_ada2c62ef6b639e4dee67642c6af7197b}{deque\+\_\+peekright}}(this)
+\item 
+\#define \mbox{\hyperlink{deque_8h_ab212673b03b1be231bd4dc92b6339d10}{deque\+\_\+queuepeek}}(this)~\mbox{\hyperlink{deque_8h_a94bc8138ed4b3c4f971764311851a063}{deque\+\_\+peekleft}}(this)
+\end{DoxyCompactItemize}
+\doxysubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef struct \mbox{\hyperlink{deque_8h_ad6000210e59a7896402f3a38b25d4ae8}{deque\+\_\+ds}} \mbox{\hyperlink{deque_8h_ad6000210e59a7896402f3a38b25d4ae8}{deque\+\_\+ds}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{deque_8h_ad6000210e59a7896402f3a38b25d4ae8}{deque\+\_\+ds}} $\ast$ \mbox{\hyperlink{deque_8h_a5698228e61d294365bb94d54b9d79458}{alloc\+\_\+deque}} (void)
+\item 
+void \mbox{\hyperlink{deque_8h_aa374f509ff4788627553316a6fb2cfe1}{dealloc\+\_\+deque}} (\mbox{\hyperlink{deque_8h_ad6000210e59a7896402f3a38b25d4ae8}{deque\+\_\+ds}} $\ast$this)
+\item 
+void \mbox{\hyperlink{deque_8h_a5f8c4cb303c78cf27e18e4601cd365d5}{deque\+\_\+pushleft}} (\mbox{\hyperlink{deque_8h_ad6000210e59a7896402f3a38b25d4ae8}{deque\+\_\+ds}} $\ast$this, void $\ast$el)
+\item 
+void \mbox{\hyperlink{deque_8h_aaac68ca0372c6023be916d1004dbdd0d}{deque\+\_\+pushright}} (\mbox{\hyperlink{deque_8h_ad6000210e59a7896402f3a38b25d4ae8}{deque\+\_\+ds}} $\ast$this, void $\ast$el)
+\item 
+void $\ast$ \mbox{\hyperlink{deque_8h_a0b0e686f6e9fb974dd3a3a9a9449d43c}{deque\+\_\+popleft}} (\mbox{\hyperlink{deque_8h_ad6000210e59a7896402f3a38b25d4ae8}{deque\+\_\+ds}} $\ast$this)
+\item 
+void $\ast$ \mbox{\hyperlink{deque_8h_ad137ad07ce5ac4746906cb9c1835642c}{deque\+\_\+popright}} (\mbox{\hyperlink{deque_8h_ad6000210e59a7896402f3a38b25d4ae8}{deque\+\_\+ds}} $\ast$this)
+\item 
+void $\ast$ \mbox{\hyperlink{deque_8h_a94bc8138ed4b3c4f971764311851a063}{deque\+\_\+peekleft}} (\mbox{\hyperlink{deque_8h_ad6000210e59a7896402f3a38b25d4ae8}{deque\+\_\+ds}} $\ast$this)
+\item 
+void $\ast$ \mbox{\hyperlink{deque_8h_ada2c62ef6b639e4dee67642c6af7197b}{deque\+\_\+peekright}} (\mbox{\hyperlink{deque_8h_ad6000210e59a7896402f3a38b25d4ae8}{deque\+\_\+ds}} $\ast$this)
+\item 
+int \mbox{\hyperlink{deque_8h_a92103248cd423f4989a8c06cf12fa55d}{deque\+\_\+isempty}} (\mbox{\hyperlink{deque_8h_ad6000210e59a7896402f3a38b25d4ae8}{deque\+\_\+ds}} $\ast$this)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{deque_8h_a3becd0240338971bd913f11c8ca52ca3}\label{deque_8h_a3becd0240338971bd913f11c8ca52ca3}} 
+\index{deque.h@{deque.h}!deque\_dequeue@{deque\_dequeue}}
+\index{deque\_dequeue@{deque\_dequeue}!deque.h@{deque.h}}
+\doxysubsubsection{\texorpdfstring{deque\_dequeue}{deque\_dequeue}}
+{\footnotesize\ttfamily \#define deque\+\_\+dequeue(\begin{DoxyParamCaption}\item[{}]{this }\end{DoxyParamCaption})~\mbox{\hyperlink{deque_8h_a0b0e686f6e9fb974dd3a3a9a9449d43c}{deque\+\_\+popleft}}(this)}
+
+\begin{DoxySeeAlso}{See also}
+\mbox{\hyperlink{deque_8h_a0b0e686f6e9fb974dd3a3a9a9449d43c}{deque\+\_\+popleft(deque\+\_\+ds$\ast$)}} 
+\end{DoxySeeAlso}
+\mbox{\Hypertarget{deque_8h_a2f758a88f4ce5814b9da1f8bfc7ddf1c}\label{deque_8h_a2f758a88f4ce5814b9da1f8bfc7ddf1c}} 
+\index{deque.h@{deque.h}!deque\_enqueue@{deque\_enqueue}}
+\index{deque\_enqueue@{deque\_enqueue}!deque.h@{deque.h}}
+\doxysubsubsection{\texorpdfstring{deque\_enqueue}{deque\_enqueue}}
+{\footnotesize\ttfamily \#define deque\+\_\+enqueue(\begin{DoxyParamCaption}\item[{}]{this,  }\item[{}]{el }\end{DoxyParamCaption})~\mbox{\hyperlink{deque_8h_aaac68ca0372c6023be916d1004dbdd0d}{deque\+\_\+pushright}}(this, el)}
+
+\begin{DoxySeeAlso}{See also}
+\mbox{\hyperlink{deque_8h_aaac68ca0372c6023be916d1004dbdd0d}{deque\+\_\+pushright(deque\+\_\+ds$\ast$, void$\ast$)}} 
+\end{DoxySeeAlso}
+\mbox{\Hypertarget{deque_8h_aa27d95262677c8a617359b19d3abae28}\label{deque_8h_aa27d95262677c8a617359b19d3abae28}} 
+\index{deque.h@{deque.h}!deque\_pop@{deque\_pop}}
+\index{deque\_pop@{deque\_pop}!deque.h@{deque.h}}
+\doxysubsubsection{\texorpdfstring{deque\_pop}{deque\_pop}}
+{\footnotesize\ttfamily \#define deque\+\_\+pop(\begin{DoxyParamCaption}\item[{}]{this }\end{DoxyParamCaption})~\mbox{\hyperlink{deque_8h_ad137ad07ce5ac4746906cb9c1835642c}{deque\+\_\+popright}}(this)}
+
+\begin{DoxySeeAlso}{See also}
+\mbox{\hyperlink{deque_8h_ad137ad07ce5ac4746906cb9c1835642c}{deque\+\_\+popright(deque\+\_\+ds$\ast$)}} 
+\end{DoxySeeAlso}
+\mbox{\Hypertarget{deque_8h_a3de10be1f6c15168f6ff794d9a78f81a}\label{deque_8h_a3de10be1f6c15168f6ff794d9a78f81a}} 
+\index{deque.h@{deque.h}!deque\_push@{deque\_push}}
+\index{deque\_push@{deque\_push}!deque.h@{deque.h}}
+\doxysubsubsection{\texorpdfstring{deque\_push}{deque\_push}}
+{\footnotesize\ttfamily \#define deque\+\_\+push(\begin{DoxyParamCaption}\item[{}]{this,  }\item[{}]{el }\end{DoxyParamCaption})~\mbox{\hyperlink{deque_8h_aaac68ca0372c6023be916d1004dbdd0d}{deque\+\_\+pushright}}(this, el)}
+
+\begin{DoxySeeAlso}{See also}
+\mbox{\hyperlink{deque_8h_aaac68ca0372c6023be916d1004dbdd0d}{deque\+\_\+pushright(deque\+\_\+ds$\ast$, void$\ast$)}} 
+\end{DoxySeeAlso}
+\mbox{\Hypertarget{deque_8h_ab212673b03b1be231bd4dc92b6339d10}\label{deque_8h_ab212673b03b1be231bd4dc92b6339d10}} 
+\index{deque.h@{deque.h}!deque\_queuepeek@{deque\_queuepeek}}
+\index{deque\_queuepeek@{deque\_queuepeek}!deque.h@{deque.h}}
+\doxysubsubsection{\texorpdfstring{deque\_queuepeek}{deque\_queuepeek}}
+{\footnotesize\ttfamily \#define deque\+\_\+queuepeek(\begin{DoxyParamCaption}\item[{}]{this }\end{DoxyParamCaption})~\mbox{\hyperlink{deque_8h_a94bc8138ed4b3c4f971764311851a063}{deque\+\_\+peekleft}}(this)}
+
+\begin{DoxySeeAlso}{See also}
+\mbox{\hyperlink{deque_8h_a94bc8138ed4b3c4f971764311851a063}{deque\+\_\+peekleft(deque\+\_\+ds$\ast$)}} 
+\end{DoxySeeAlso}
+\mbox{\Hypertarget{deque_8h_a0f368dacb6d5905f746afbcee55ddc53}\label{deque_8h_a0f368dacb6d5905f746afbcee55ddc53}} 
+\index{deque.h@{deque.h}!deque\_stackpeek@{deque\_stackpeek}}
+\index{deque\_stackpeek@{deque\_stackpeek}!deque.h@{deque.h}}
+\doxysubsubsection{\texorpdfstring{deque\_stackpeek}{deque\_stackpeek}}
+{\footnotesize\ttfamily \#define deque\+\_\+stackpeek(\begin{DoxyParamCaption}\item[{}]{this }\end{DoxyParamCaption})~\mbox{\hyperlink{deque_8h_ada2c62ef6b639e4dee67642c6af7197b}{deque\+\_\+peekright}}(this)}
+
+\begin{DoxySeeAlso}{See also}
+\mbox{\hyperlink{deque_8h_ada2c62ef6b639e4dee67642c6af7197b}{deque\+\_\+peekright(deque\+\_\+ds$\ast$)}} 
+\end{DoxySeeAlso}
+
+
+\doxysubsection{Typedef Documentation}
+\mbox{\Hypertarget{deque_8h_ad6000210e59a7896402f3a38b25d4ae8}\label{deque_8h_ad6000210e59a7896402f3a38b25d4ae8}} 
+\index{deque.h@{deque.h}!deque\_ds@{deque\_ds}}
+\index{deque\_ds@{deque\_ds}!deque.h@{deque.h}}
+\doxysubsubsection{\texorpdfstring{deque\_ds}{deque\_ds}}
+{\footnotesize\ttfamily typedef struct \mbox{\hyperlink{deque_8h_ad6000210e59a7896402f3a38b25d4ae8}{deque\+\_\+ds}} \mbox{\hyperlink{deque_8h_ad6000210e59a7896402f3a38b25d4ae8}{deque\+\_\+ds}}}
+
+Forward declaration of the deque data structure. Internally implemented as a growing dynamic array. 
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{deque_8h_a5698228e61d294365bb94d54b9d79458}\label{deque_8h_a5698228e61d294365bb94d54b9d79458}} 
+\index{deque.h@{deque.h}!alloc\_deque@{alloc\_deque}}
+\index{alloc\_deque@{alloc\_deque}!deque.h@{deque.h}}
+\doxysubsubsection{\texorpdfstring{alloc\_deque()}{alloc\_deque()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{deque_8h_ad6000210e59a7896402f3a38b25d4ae8}{deque\+\_\+ds}} $\ast$ alloc\+\_\+deque (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+Allocates a deque instance.
+
+\begin{DoxyReturn}{Returns}
+deque instance 
+\end{DoxyReturn}
+\mbox{\Hypertarget{deque_8h_aa374f509ff4788627553316a6fb2cfe1}\label{deque_8h_aa374f509ff4788627553316a6fb2cfe1}} 
+\index{deque.h@{deque.h}!dealloc\_deque@{dealloc\_deque}}
+\index{dealloc\_deque@{dealloc\_deque}!deque.h@{deque.h}}
+\doxysubsubsection{\texorpdfstring{dealloc\_deque()}{dealloc\_deque()}}
+{\footnotesize\ttfamily void dealloc\+\_\+deque (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{deque_8h_ad6000210e59a7896402f3a38b25d4ae8}{deque\+\_\+ds}} $\ast$}]{this }\end{DoxyParamCaption})}
+
+Deallocates a deque.
+
+
+\begin{DoxyParams}{Parameters}
+{\em this} & deallocates the given deque \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{deque_8h_a92103248cd423f4989a8c06cf12fa55d}\label{deque_8h_a92103248cd423f4989a8c06cf12fa55d}} 
+\index{deque.h@{deque.h}!deque\_isempty@{deque\_isempty}}
+\index{deque\_isempty@{deque\_isempty}!deque.h@{deque.h}}
+\doxysubsubsection{\texorpdfstring{deque\_isempty()}{deque\_isempty()}}
+{\footnotesize\ttfamily int deque\+\_\+isempty (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{deque_8h_ad6000210e59a7896402f3a38b25d4ae8}{deque\+\_\+ds}} $\ast$}]{this }\end{DoxyParamCaption})}
+
+Tests whether the given deque is empty.
+
+
+\begin{DoxyParams}{Parameters}
+{\em this} & given deque instance \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+truey if deque is empty, falsey otherwise 
+\end{DoxyReturn}
+\mbox{\Hypertarget{deque_8h_a94bc8138ed4b3c4f971764311851a063}\label{deque_8h_a94bc8138ed4b3c4f971764311851a063}} 
+\index{deque.h@{deque.h}!deque\_peekleft@{deque\_peekleft}}
+\index{deque\_peekleft@{deque\_peekleft}!deque.h@{deque.h}}
+\doxysubsubsection{\texorpdfstring{deque\_peekleft()}{deque\_peekleft()}}
+{\footnotesize\ttfamily void $\ast$ deque\+\_\+peekleft (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{deque_8h_ad6000210e59a7896402f3a38b25d4ae8}{deque\+\_\+ds}} $\ast$}]{this }\end{DoxyParamCaption})}
+
+Retrives element at the left of the deque without removing it.
+
+
+\begin{DoxyParams}{Parameters}
+{\em this} & given deque instance \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+leftmost value of the deque, or NULL if deque is empty 
+\end{DoxyReturn}
+\mbox{\Hypertarget{deque_8h_ada2c62ef6b639e4dee67642c6af7197b}\label{deque_8h_ada2c62ef6b639e4dee67642c6af7197b}} 
+\index{deque.h@{deque.h}!deque\_peekright@{deque\_peekright}}
+\index{deque\_peekright@{deque\_peekright}!deque.h@{deque.h}}
+\doxysubsubsection{\texorpdfstring{deque\_peekright()}{deque\_peekright()}}
+{\footnotesize\ttfamily void $\ast$ deque\+\_\+peekright (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{deque_8h_ad6000210e59a7896402f3a38b25d4ae8}{deque\+\_\+ds}} $\ast$}]{this }\end{DoxyParamCaption})}
+
+Retrives element at the right of the deque without removing it.
+
+
+\begin{DoxyParams}{Parameters}
+{\em this} & given deque instance \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+right value of the deque, or NULL if deque is empty 
+\end{DoxyReturn}
+\mbox{\Hypertarget{deque_8h_a0b0e686f6e9fb974dd3a3a9a9449d43c}\label{deque_8h_a0b0e686f6e9fb974dd3a3a9a9449d43c}} 
+\index{deque.h@{deque.h}!deque\_popleft@{deque\_popleft}}
+\index{deque\_popleft@{deque\_popleft}!deque.h@{deque.h}}
+\doxysubsubsection{\texorpdfstring{deque\_popleft()}{deque\_popleft()}}
+{\footnotesize\ttfamily void $\ast$ deque\+\_\+popleft (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{deque_8h_ad6000210e59a7896402f3a38b25d4ae8}{deque\+\_\+ds}} $\ast$}]{this }\end{DoxyParamCaption})}
+
+Removes and retrieves the element that was at left of the deque.
+
+
+\begin{DoxyParams}{Parameters}
+{\em this} & given deque instance \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+removed leftmost value of the deque, or NULL if deque is empty 
+\end{DoxyReturn}
+\mbox{\Hypertarget{deque_8h_ad137ad07ce5ac4746906cb9c1835642c}\label{deque_8h_ad137ad07ce5ac4746906cb9c1835642c}} 
+\index{deque.h@{deque.h}!deque\_popright@{deque\_popright}}
+\index{deque\_popright@{deque\_popright}!deque.h@{deque.h}}
+\doxysubsubsection{\texorpdfstring{deque\_popright()}{deque\_popright()}}
+{\footnotesize\ttfamily void $\ast$ deque\+\_\+popright (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{deque_8h_ad6000210e59a7896402f3a38b25d4ae8}{deque\+\_\+ds}} $\ast$}]{this }\end{DoxyParamCaption})}
+
+Removes and retrieves the element that was at right of the deque.
+
+
+\begin{DoxyParams}{Parameters}
+{\em this} & given deque instance \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+removed righttmost value of the deque, or NULL if deque is empty 
+\end{DoxyReturn}
+\mbox{\Hypertarget{deque_8h_a5f8c4cb303c78cf27e18e4601cd365d5}\label{deque_8h_a5f8c4cb303c78cf27e18e4601cd365d5}} 
+\index{deque.h@{deque.h}!deque\_pushleft@{deque\_pushleft}}
+\index{deque\_pushleft@{deque\_pushleft}!deque.h@{deque.h}}
+\doxysubsubsection{\texorpdfstring{deque\_pushleft()}{deque\_pushleft()}}
+{\footnotesize\ttfamily void deque\+\_\+pushleft (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{deque_8h_ad6000210e59a7896402f3a38b25d4ae8}{deque\+\_\+ds}} $\ast$}]{this,  }\item[{void $\ast$}]{el }\end{DoxyParamCaption})}
+
+Inserts the given element at left of the deque.
+
+
+\begin{DoxyParams}[1]{Parameters}
+ & {\em this} & given deque instance \\
+\hline
+\mbox{\texttt{ in}}  & {\em el} & given element \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{deque_8h_aaac68ca0372c6023be916d1004dbdd0d}\label{deque_8h_aaac68ca0372c6023be916d1004dbdd0d}} 
+\index{deque.h@{deque.h}!deque\_pushright@{deque\_pushright}}
+\index{deque\_pushright@{deque\_pushright}!deque.h@{deque.h}}
+\doxysubsubsection{\texorpdfstring{deque\_pushright()}{deque\_pushright()}}
+{\footnotesize\ttfamily void deque\+\_\+pushright (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{deque_8h_ad6000210e59a7896402f3a38b25d4ae8}{deque\+\_\+ds}} $\ast$}]{this,  }\item[{void $\ast$}]{el }\end{DoxyParamCaption})}
+
+Inserts the given element at right of the deque.
+
+
+\begin{DoxyParams}[1]{Parameters}
+ & {\em this} & given deque instance \\
+\hline
+\mbox{\texttt{ in}}  & {\em el} & given element \\
+\hline
+\end{DoxyParams}

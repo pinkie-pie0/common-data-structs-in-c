@@ -1,0 +1,25 @@
+\label{index_md_README}%
+\Hypertarget{index_md_README}%
+Self-\/explanatory, these are commonly used data structures implemented in C. All of this is done for practice.\hypertarget{index_autotoc_md1}{}\doxysubsection{data structures implemented}\label{index_autotoc_md1}
+
+\begin{DoxyItemize}
+\item avltree
+\item deque
+\begin{DoxyItemize}
+\item uses a circular dynamic array.
+\end{DoxyItemize}
+\item graph
+\begin{DoxyItemize}
+\item uses a nested hashmap akin to unordered\+\_\+map$<$vertex, unordered\+\_\+map$<$vertex, double$>$$>$ as adjaceny list.
+\end{DoxyItemize}
+\item hashmap
+\begin{DoxyItemize}
+\item uses robin-\/hood hashing. (lookup could probably be improved?)
+\end{DoxyItemize}
+\item pqueue
+\begin{DoxyItemize}
+\item uses a 4-\/ary heap.
+\item this should really just be called pset instead since duplicate items aren\textquotesingle{}t allowed.
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{index_autotoc_md2}{}\doxysection{how to compile}\label{index_autotoc_md2}
+Just type {\ttfamily make}, this will generate an executable called {\ttfamily driver} that tests the following data structures. 

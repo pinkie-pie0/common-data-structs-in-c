@@ -1,0 +1,218 @@
+\hypertarget{graph_8h}{}\doxysection{inc/graph.h File Reference}
+\label{graph_8h}\index{inc/graph.h@{inc/graph.h}}
+{\ttfamily \#include \char`\"{}deque.\+h\char`\"{}}\newline
+\doxysubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef struct \mbox{\hyperlink{graph_8h_a0e667b6d4bb02410756f70f18d92936e}{graph\+\_\+ds}} \mbox{\hyperlink{graph_8h_a0e667b6d4bb02410756f70f18d92936e}{graph\+\_\+ds}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{graph_8h_a0e667b6d4bb02410756f70f18d92936e}{graph\+\_\+ds}} $\ast$ \mbox{\hyperlink{graph_8h_a1c038f53b16beaf12f2ce8eb4a26ec5c}{alloc\+\_\+graph}} (int label\+\_\+hash(const void $\ast$), int label\+\_\+equals(const void $\ast$, const void $\ast$))
+\item 
+void \mbox{\hyperlink{graph_8h_a8fdad385059056a0e378f5738f02ff52}{dealloc\+\_\+graph}} (\mbox{\hyperlink{graph_8h_a0e667b6d4bb02410756f70f18d92936e}{graph\+\_\+ds}} $\ast$this)
+\item 
+int \mbox{\hyperlink{graph_8h_a87f13c6da6a8702c78875b1e1299513c}{graph\+\_\+add\+\_\+vertex}} (\mbox{\hyperlink{graph_8h_a0e667b6d4bb02410756f70f18d92936e}{graph\+\_\+ds}} $\ast$this, void $\ast$label)
+\item 
+int \mbox{\hyperlink{graph_8h_a49b6271cc58c9f97492409632688e639}{graph\+\_\+add\+\_\+edge}} (\mbox{\hyperlink{graph_8h_a0e667b6d4bb02410756f70f18d92936e}{graph\+\_\+ds}} $\ast$this, void $\ast$a, void $\ast$b, double weight)
+\item 
+int \mbox{\hyperlink{graph_8h_aa259e1ef3faddf064e6e252237600ebc}{graph\+\_\+remove\+\_\+edge}} (\mbox{\hyperlink{graph_8h_a0e667b6d4bb02410756f70f18d92936e}{graph\+\_\+ds}} $\ast$this, void $\ast$a, void $\ast$b)
+\item 
+int \mbox{\hyperlink{graph_8h_af904a30c399c0e1e5c90b32cfbc63a1e}{graph\+\_\+remove\+\_\+vertex}} (\mbox{\hyperlink{graph_8h_a0e667b6d4bb02410756f70f18d92936e}{graph\+\_\+ds}} $\ast$this, void $\ast$label)
+\item 
+int \mbox{\hyperlink{graph_8h_a14e1efae23fb26b6b5dd9460d053565d}{graph\+\_\+has\+\_\+edge}} (\mbox{\hyperlink{graph_8h_a0e667b6d4bb02410756f70f18d92936e}{graph\+\_\+ds}} $\ast$this, void $\ast$a, void $\ast$b)
+\item 
+\mbox{\hyperlink{deque_8h_ad6000210e59a7896402f3a38b25d4ae8}{deque\+\_\+ds}} $\ast$ \mbox{\hyperlink{graph_8h_a5e65fba426ee911393c03f53768338a7}{graph\+\_\+breadth\+\_\+first\+\_\+search}} (\mbox{\hyperlink{graph_8h_a0e667b6d4bb02410756f70f18d92936e}{graph\+\_\+ds}} $\ast$this, void $\ast$origin)
+\item 
+\mbox{\hyperlink{deque_8h_ad6000210e59a7896402f3a38b25d4ae8}{deque\+\_\+ds}} $\ast$ \mbox{\hyperlink{graph_8h_add1381c8a0ef4395dde02572f19ee292}{graph\+\_\+depth\+\_\+first\+\_\+search}} (\mbox{\hyperlink{graph_8h_a0e667b6d4bb02410756f70f18d92936e}{graph\+\_\+ds}} $\ast$this, void $\ast$origin)
+\item 
+double \mbox{\hyperlink{graph_8h_aeceddab7f52da91c79045c13db9daa75}{graph\+\_\+cheapest\+\_\+path}} (\mbox{\hyperlink{graph_8h_a0e667b6d4bb02410756f70f18d92936e}{graph\+\_\+ds}} $\ast$this, void $\ast$a, void $\ast$b, \mbox{\hyperlink{deque_8h_ad6000210e59a7896402f3a38b25d4ae8}{deque\+\_\+ds}} $\ast$stack)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Typedef Documentation}
+\mbox{\Hypertarget{graph_8h_a0e667b6d4bb02410756f70f18d92936e}\label{graph_8h_a0e667b6d4bb02410756f70f18d92936e}} 
+\index{graph.h@{graph.h}!graph\_ds@{graph\_ds}}
+\index{graph\_ds@{graph\_ds}!graph.h@{graph.h}}
+\doxysubsubsection{\texorpdfstring{graph\_ds}{graph\_ds}}
+{\footnotesize\ttfamily typedef struct \mbox{\hyperlink{graph_8h_a0e667b6d4bb02410756f70f18d92936e}{graph\+\_\+ds}} \mbox{\hyperlink{graph_8h_a0e667b6d4bb02410756f70f18d92936e}{graph\+\_\+ds}}}
+
+Forward declaration for the graph data structure. Internally implemented as an weighted undirected graph that uses a nested hashmap as the adjacency list (think unordered\+\_\+map$<$node, unordered\+\_\+map$<$node, double$>$$>$, such syntax doesn\textquotesingle{}t exist in C but that\textquotesingle{}s how the graph is implemented, almost). There can only exist at most one symmetric edge between any two vertices. 
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{graph_8h_a1c038f53b16beaf12f2ce8eb4a26ec5c}\label{graph_8h_a1c038f53b16beaf12f2ce8eb4a26ec5c}} 
+\index{graph.h@{graph.h}!alloc\_graph@{alloc\_graph}}
+\index{alloc\_graph@{alloc\_graph}!graph.h@{graph.h}}
+\doxysubsubsection{\texorpdfstring{alloc\_graph()}{alloc\_graph()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{graph_8h_a0e667b6d4bb02410756f70f18d92936e}{graph\+\_\+ds}} $\ast$ alloc\+\_\+graph (\begin{DoxyParamCaption}\item[{int }]{label\+\_\+hashconst void $\ast$,  }\item[{int }]{label\+\_\+equalsconst void $\ast$, const void $\ast$ }\end{DoxyParamCaption})}
+
+Allocates a weighted undirected graph instance with given hash/equality functions.
+
+\begin{DoxyReturn}{Returns}
+instance of the graph 
+\end{DoxyReturn}
+\mbox{\Hypertarget{graph_8h_a8fdad385059056a0e378f5738f02ff52}\label{graph_8h_a8fdad385059056a0e378f5738f02ff52}} 
+\index{graph.h@{graph.h}!dealloc\_graph@{dealloc\_graph}}
+\index{dealloc\_graph@{dealloc\_graph}!graph.h@{graph.h}}
+\doxysubsubsection{\texorpdfstring{dealloc\_graph()}{dealloc\_graph()}}
+{\footnotesize\ttfamily void dealloc\+\_\+graph (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{graph_8h_a0e667b6d4bb02410756f70f18d92936e}{graph\+\_\+ds}} $\ast$}]{this }\end{DoxyParamCaption})}
+
+Deallocates a graph.
+
+
+\begin{DoxyParams}{Parameters}
+{\em this} & deallocates the given graph \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{graph_8h_a49b6271cc58c9f97492409632688e639}\label{graph_8h_a49b6271cc58c9f97492409632688e639}} 
+\index{graph.h@{graph.h}!graph\_add\_edge@{graph\_add\_edge}}
+\index{graph\_add\_edge@{graph\_add\_edge}!graph.h@{graph.h}}
+\doxysubsubsection{\texorpdfstring{graph\_add\_edge()}{graph\_add\_edge()}}
+{\footnotesize\ttfamily int graph\+\_\+add\+\_\+edge (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{graph_8h_a0e667b6d4bb02410756f70f18d92936e}{graph\+\_\+ds}} $\ast$}]{this,  }\item[{void $\ast$}]{a,  }\item[{void $\ast$}]{b,  }\item[{double}]{weight }\end{DoxyParamCaption})}
+
+Adds a weighted undirected edge between two labels that correspond to the vertices. The labels must have been added already, and the edge must not already exist.
+
+
+\begin{DoxyParams}[1]{Parameters}
+ & {\em this} & given graph instance \\
+\hline
+\mbox{\texttt{ in}}  & {\em a} & first label \\
+\hline
+\mbox{\texttt{ in}}  & {\em b} & second label \\
+\hline
+\mbox{\texttt{ in}}  & {\em weight} & given weight \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+truey if operation was succesful, falsey otherwise 
+\end{DoxyReturn}
+\mbox{\Hypertarget{graph_8h_a87f13c6da6a8702c78875b1e1299513c}\label{graph_8h_a87f13c6da6a8702c78875b1e1299513c}} 
+\index{graph.h@{graph.h}!graph\_add\_vertex@{graph\_add\_vertex}}
+\index{graph\_add\_vertex@{graph\_add\_vertex}!graph.h@{graph.h}}
+\doxysubsubsection{\texorpdfstring{graph\_add\_vertex()}{graph\_add\_vertex()}}
+{\footnotesize\ttfamily int graph\+\_\+add\+\_\+vertex (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{graph_8h_a0e667b6d4bb02410756f70f18d92936e}{graph\+\_\+ds}} $\ast$}]{this,  }\item[{void $\ast$}]{label }\end{DoxyParamCaption})}
+
+Adds a vertex to this graph with the given label.
+
+
+\begin{DoxyParams}[1]{Parameters}
+ & {\em this} & given graph instance \\
+\hline
+\mbox{\texttt{ in}}  & {\em label} & given label \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+truey if operation was succesful, falsey otherwise 
+\end{DoxyReturn}
+\mbox{\Hypertarget{graph_8h_a5e65fba426ee911393c03f53768338a7}\label{graph_8h_a5e65fba426ee911393c03f53768338a7}} 
+\index{graph.h@{graph.h}!graph\_breadth\_first\_search@{graph\_breadth\_first\_search}}
+\index{graph\_breadth\_first\_search@{graph\_breadth\_first\_search}!graph.h@{graph.h}}
+\doxysubsubsection{\texorpdfstring{graph\_breadth\_first\_search()}{graph\_breadth\_first\_search()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{deque_8h_ad6000210e59a7896402f3a38b25d4ae8}{deque\+\_\+ds}} $\ast$ graph\+\_\+breadth\+\_\+first\+\_\+search (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{graph_8h_a0e667b6d4bb02410756f70f18d92936e}{graph\+\_\+ds}} $\ast$}]{this,  }\item[{void $\ast$}]{origin }\end{DoxyParamCaption})}
+
+Given an origin label, retrives a breadth first search listing from the origin to other neighbors in the graph.
+
+
+\begin{DoxyParams}[1]{Parameters}
+ & {\em this} & given graph instance \\
+\hline
+\mbox{\texttt{ in}}  & {\em origin} & given label corresponding the origin vertex \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+deque representing breadth first search starting from origin 
+\end{DoxyReturn}
+\mbox{\Hypertarget{graph_8h_aeceddab7f52da91c79045c13db9daa75}\label{graph_8h_aeceddab7f52da91c79045c13db9daa75}} 
+\index{graph.h@{graph.h}!graph\_cheapest\_path@{graph\_cheapest\_path}}
+\index{graph\_cheapest\_path@{graph\_cheapest\_path}!graph.h@{graph.h}}
+\doxysubsubsection{\texorpdfstring{graph\_cheapest\_path()}{graph\_cheapest\_path()}}
+{\footnotesize\ttfamily double graph\+\_\+cheapest\+\_\+path (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{graph_8h_a0e667b6d4bb02410756f70f18d92936e}{graph\+\_\+ds}} $\ast$}]{this,  }\item[{void $\ast$}]{a,  }\item[{void $\ast$}]{b,  }\item[{\mbox{\hyperlink{deque_8h_ad6000210e59a7896402f3a38b25d4ae8}{deque\+\_\+ds}} $\ast$}]{stack }\end{DoxyParamCaption})}
+
+
+\begin{DoxyParams}[1]{Parameters}
+ & {\em this} & given graph instance \\
+\hline
+\mbox{\texttt{ in}}  & {\em a} & first label \\
+\hline
+\mbox{\texttt{ in}}  & {\em b} & second label \\
+\hline
+\mbox{\texttt{ out}}  & {\em stack} & cheapest path taken from a to b (nullabe) \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{graph_8h_add1381c8a0ef4395dde02572f19ee292}\label{graph_8h_add1381c8a0ef4395dde02572f19ee292}} 
+\index{graph.h@{graph.h}!graph\_depth\_first\_search@{graph\_depth\_first\_search}}
+\index{graph\_depth\_first\_search@{graph\_depth\_first\_search}!graph.h@{graph.h}}
+\doxysubsubsection{\texorpdfstring{graph\_depth\_first\_search()}{graph\_depth\_first\_search()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{deque_8h_ad6000210e59a7896402f3a38b25d4ae8}{deque\+\_\+ds}} $\ast$ graph\+\_\+depth\+\_\+first\+\_\+search (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{graph_8h_a0e667b6d4bb02410756f70f18d92936e}{graph\+\_\+ds}} $\ast$}]{this,  }\item[{void $\ast$}]{origin }\end{DoxyParamCaption})}
+
+Given an origin label, retrives a depth first search listing from the origin to other neighbors in the graph.
+
+
+\begin{DoxyParams}[1]{Parameters}
+ & {\em this} & given graph instance \\
+\hline
+\mbox{\texttt{ in}}  & {\em origin} & given label corresponding the origin vertex \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+deque representing depth first search starting from origin 
+\end{DoxyReturn}
+\mbox{\Hypertarget{graph_8h_a14e1efae23fb26b6b5dd9460d053565d}\label{graph_8h_a14e1efae23fb26b6b5dd9460d053565d}} 
+\index{graph.h@{graph.h}!graph\_has\_edge@{graph\_has\_edge}}
+\index{graph\_has\_edge@{graph\_has\_edge}!graph.h@{graph.h}}
+\doxysubsubsection{\texorpdfstring{graph\_has\_edge()}{graph\_has\_edge()}}
+{\footnotesize\ttfamily int graph\+\_\+has\+\_\+edge (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{graph_8h_a0e667b6d4bb02410756f70f18d92936e}{graph\+\_\+ds}} $\ast$}]{this,  }\item[{void $\ast$}]{a,  }\item[{void $\ast$}]{b }\end{DoxyParamCaption})}
+
+Tests whether an undirected edges exist between two given labels.
+
+
+\begin{DoxyParams}[1]{Parameters}
+ & {\em this} & given graph instance \\
+\hline
+\mbox{\texttt{ in}}  & {\em a} & first label \\
+\hline
+\mbox{\texttt{ in}}  & {\em b} & second label \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+truey if edge exists, falsey otherwise 
+\end{DoxyReturn}
+\mbox{\Hypertarget{graph_8h_aa259e1ef3faddf064e6e252237600ebc}\label{graph_8h_aa259e1ef3faddf064e6e252237600ebc}} 
+\index{graph.h@{graph.h}!graph\_remove\_edge@{graph\_remove\_edge}}
+\index{graph\_remove\_edge@{graph\_remove\_edge}!graph.h@{graph.h}}
+\doxysubsubsection{\texorpdfstring{graph\_remove\_edge()}{graph\_remove\_edge()}}
+{\footnotesize\ttfamily int graph\+\_\+remove\+\_\+edge (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{graph_8h_a0e667b6d4bb02410756f70f18d92936e}{graph\+\_\+ds}} $\ast$}]{this,  }\item[{void $\ast$}]{a,  }\item[{void $\ast$}]{b }\end{DoxyParamCaption})}
+
+Removes a weighted undirected edge between two labels that correspond to the vertices. The labels must have been added already, and the edge must already exist.
+
+
+\begin{DoxyParams}[1]{Parameters}
+ & {\em this} & given graph instance \\
+\hline
+\mbox{\texttt{ in}}  & {\em a} & first label \\
+\hline
+\mbox{\texttt{ in}}  & {\em b} & second label \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+truey if operation was succesful, falsey otherwise 
+\end{DoxyReturn}
+\mbox{\Hypertarget{graph_8h_af904a30c399c0e1e5c90b32cfbc63a1e}\label{graph_8h_af904a30c399c0e1e5c90b32cfbc63a1e}} 
+\index{graph.h@{graph.h}!graph\_remove\_vertex@{graph\_remove\_vertex}}
+\index{graph\_remove\_vertex@{graph\_remove\_vertex}!graph.h@{graph.h}}
+\doxysubsubsection{\texorpdfstring{graph\_remove\_vertex()}{graph\_remove\_vertex()}}
+{\footnotesize\ttfamily int graph\+\_\+remove\+\_\+vertex (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{graph_8h_a0e667b6d4bb02410756f70f18d92936e}{graph\+\_\+ds}} $\ast$}]{this,  }\item[{void $\ast$}]{label }\end{DoxyParamCaption})}
+
+Removes a vertex in this graph that corresponds to the given label.
+
+
+\begin{DoxyParams}[1]{Parameters}
+ & {\em this} & given graph instance \\
+\hline
+\mbox{\texttt{ in}}  & {\em label} & given label \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+truey if operation was succesful, falsey otherwise 
+\end{DoxyReturn}
